@@ -9,4 +9,8 @@ urlpatterns = [
    path('',view.map, name="map"),
    path('mydata',view.mydata, name="mydata"),
    path('crearEmpresa', view.crearEmpresa, name='crearEmpresa'),
+   path('listaEmp/', view.vistaListaEmpl, name='listaEmp'),
+   path('crearEmp/', view.vistaCrearEmpl, name='crearEmp'),
+   path('editarEmp/', view.vistaEditarEmpl, name='editarEmp'),
+   path('verEmp/', view.vistaVerEmpl, name='verEmp'),
 ]

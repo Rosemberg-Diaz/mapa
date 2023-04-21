@@ -110,3 +110,19 @@ def mydata(request):
                         ))
 
     return JsonResponse(result_list, safe=False)
+
+
+def vistaListaEmpl(request):
+    return render(request, "google/listaEmp.html")
+
+
+def vistaCrearEmpl(request):
+    return render(request, "Empleados/crearEmp.html")
+
+
+def vistaEditarEmpl(request):
+    return render(request, "Empleados/editarEmp.html")
+
+
+def vistaVerEmpl(request):
+    return render(request, "Empleados/verPersonal.html")

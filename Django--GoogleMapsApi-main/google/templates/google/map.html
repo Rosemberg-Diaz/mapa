@@ -1,59 +1,94 @@
-
-{% extends 'google/base.html' %}
-{% block content %}
+{% extends 'google/base.html' %} 
+{% block content %} 
 {% load static %}
 
 <script>
+  $(document).ready(function () {
+    $.ajax({
+      url: "{% url 'mydata'%}",
+      method: "GET",
+      success: function (data) {
+        console.log(data);
+        initMap(data);
+      },
+    });
+  });
 
-    $(document).ready(function(){
-        $.ajax({
-            url: "{% url 'mydata'%}",
-            method: 'GET',
-            success: function (data) {
-                console.log(data);
-                initMap(data);
-            }
+  function initMap(data) {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 7,
+      center: { lat: 3.933215078541915, lng: -76.56998432650508 },
+    });
+    const infoWindow = new google.maps.InfoWindow();
+    const markers = data?.map((i) => {
+      const marker = new google.maps.Marker({
+        position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
+        map: map,
+        title: `${i.nombre}`,
+        optimized: false,
+      });
+      marker.addListener("click", () => {
+        infoWindow.close();
+        infoWindow.setContent(marker.getTitle());
+        infoWindow.open(marker.getMap(), marker);
+        updateSidebarContent(i); // Actualiza el contenido del sidebar
+        showSidebar(); // Despliega el sidebar
       });
     });
 
-    function initMap(data) {
-       const map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: {lat: 3.933215078541915, lng: -76.56998432650508}
-       });
-
-       const infoWindow = new google.maps.InfoWindow();
-
-       const markers = data?.map((i) => {
-            const marker = new google.maps.Marker({
-                position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude)},
-                map: map,
-                title: `${i.nombre}`,
-                optimized: false,
-            });
-            marker.addListener("click", () => {
-              infoWindow.close();
-              infoWindow.setContent(marker.getTitle());
-              infoWindow.open(marker.getMap(), marker);
-            });
+    function updateSidebarContent(markerData) {
+      $("#sidebar-title").text(markerData.nombre);
+      $("#sidebar-description").text(markerData.descripcion);
+      $(document).ready(function () {
+        $("#close-sidebar").click(function () {
+          $("#sidebar").hide();
         });
-     }
-  </script>
+      });
+    }
+    function showSidebar() {
+      $("#sidebar").show();
+    }
+  }
 
-
-<div class="pageholder">
-    <a href="{% url 'crearEmpresa'%}">Crear</a>
-    <div class="linkholder">
-        <div class="mapholder">
-            <div id="map"></div>
-            <script
-            src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap&v=weekly"
-            defer
-            ></script>
-        </div>
+</script>
+<header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Empresas</a>
+    <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <form class="d-flex position-relative ms-auto me-auto">
+      <button type="button" class="btn btn-outline-warning"><a class="no-underline text-white" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
+      </form>
+      <a class="navbar-text text-white d-flex align-items-center" href="#">Salir<iclass="bi bi-arrow-bar-left ms-1"></i></a>
     </div>
+  </div>
+</nav>
+</header>
+<div class="pageholder">
+  <div class="linkholder">
+    <div id="sidebar">
+    <button class="btn btn-outline-danger" id="close-sidebar">Cerrar</button>
+      <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
+      <p id="sidebar-description">Aquí poner empresas</p>
+      <center><button class="btn btn-outline-primary" onclick="openSidebar('/listaEmp/')">Ver personal</button></center>
+    </div>
+    <div id="nuevo-sidebar" style="display: none;">
+        <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
+        <div id="sidebar-content"></div>
+    </div>
+    <div class="mapholder">
+      <div id="map"></div>
+      <script
+        src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap&v=weekly"
+        defer
+      ></script>
+    </div>
+  </div>
 </div>
-
-
-
+<script type="text/javascript" src="{% static '/sidebar.js' %}"></script>
 {% endblock content %}
