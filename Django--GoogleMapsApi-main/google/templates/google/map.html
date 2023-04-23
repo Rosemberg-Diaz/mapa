@@ -74,7 +74,56 @@
     <div id="sidebar">
     <button class="btn btn-outline-danger" id="close-sidebar">Cerrar</button>
       <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
-      <p id="sidebar-description">Aquí poner empresas</p>
+      <div id="{{ empresa.NIT }}-info" class="info-container">
+
+      <button class="edit-button" title="Editar">&#9998;</button>
+
+      <button class="delete-button" title="Borrar">&#128465;</button>
+
+      <h4 class="drawer-title">{{ empresa.nombre }}</h4>
+
+      <h2 class="drawer-subtitulo">Acerca de:</h2>
+
+      <div class="drawer-content">
+        <p>DESCRIPCIÓN: {{ empresa.descripcion }}</p>
+      </div>
+
+      <div class="drawer-content">
+          <P>* FECHA DE FUNDACIÓN: {{ empresa.fechaFundacion }}</P>
+      </div>
+
+      <div class="drawer-content">
+        <p>* NIT: {{ empresa.NIT }}</p>
+      </div>
+
+      <div class="drawer-content">
+        <p>* SEDE: {{ sede.direccion }}</p>
+      </div>
+
+      <div class="drawer-content">
+        <p>* MISIÓN: {{ empresa.mision }}</p>
+      </div>
+
+      <div class="drawer-content">
+        <p>* VISIÓN: {{ empresa.vision }}</p>
+      </div>
+
+      <div class="drawer-content">
+        <p>* CONTACTO: {{ empresa.email }}</p>
+      </div>
+
+      <div class="drawer-content">
+        <p>* ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</p>
+      </div>
+
+      <h2 class="drawer-subtitulo">Pagina oficial:</h2>
+
+      <div class="drawer-pagina">
+        <a  href="#" class="color-web">{{ empresa.paginaWeb }}</a>
+      </div>
+
+
+    </div>
       <center><button class="btn btn-outline-primary" onclick="openSidebar('/listaEmp/')">Ver personal</button></center>
     </div>
     <div id="nuevo-sidebar" style="display: none;">

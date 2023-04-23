@@ -23,16 +23,55 @@ class empresaForm(forms.ModelForm):
     fields = ('NIT', 'nombre', 'mision', 'vision', 'descripcion', 'telefono', 'direccion', 'email', 'paginaWeb')
     widgets = {
       'NIT': forms.NumberInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'nombre': forms.TextInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'mision': forms.Textarea(
+        attrs={
+          'class': 'form-control',
+          'rows': 5,  # número de filas del textarea
+          'cols': 40  # número de columnas del textarea
+        }
+      ),
+      'vision': forms.Textarea(
+        attrs={
+          'class': 'form-control',
+          'rows': 5,  # número de filas del textarea
+          'cols': 40  # número de columnas del textarea
+        }
       ),
       'descripcion': forms.Textarea(
         attrs={
+          'class': 'form-control',
           'rows': 5,  # número de filas del textarea
           'cols': 40  # número de columnas del textarea
         }
       ),
       'email': forms.EmailInput(
+        attrs={
+          'class': 'form-control'
+        }
       ),
       'telefono': forms.NumberInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'direccion': forms.TextInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'paginaWeb': forms.TextInput(
+        attrs={
+          'class': 'form-control'
+        }
       )
     }
 
