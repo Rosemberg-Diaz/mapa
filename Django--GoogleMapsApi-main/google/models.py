@@ -33,3 +33,20 @@ class Empresas(models.Model):
 
     def __str__(self):
         return str(self.latitude) + str(self.longitude)
+
+class Sedes(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100)
+    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)
+    ciudad = models.ForeignKey(Ciudades, on_delete=models.CASCADE)
+    estado = models.BooleanField(default=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    class Meta:
+        db_table = 'Sedes'
+
+    def __str__(self):
+        return str(self.latitude) + str(self.longitude)

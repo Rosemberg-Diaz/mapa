@@ -20,5 +20,40 @@ class DateTimeInput(forms.DateTimeInput):
 class empresaForm(forms.ModelForm):
   class Meta:
     model = Empresas
-    fields = ('NIT', 'nombre', 'mision', 'vision', 'direccion', 'descripcion', 'email', 'paginaWeb')
+    fields = ('NIT', 'nombre', 'mision', 'vision', 'descripcion', 'telefono', 'direccion', 'email', 'paginaWeb')
+    widgets = {
+      'NIT': forms.NumberInput(
+      ),
+      'descripcion': forms.Textarea(
+        attrs={
+          'rows': 5,  # número de filas del textarea
+          'cols': 40  # número de columnas del textarea
+        }
+      ),
+      'email': forms.EmailInput(
+      ),
+      'telefono': forms.NumberInput(
+      )
+    }
 
+class sedeForm(forms.ModelForm):
+  class Meta:
+    model = Sedes
+    fields = ('nombre', 'telefono', 'direccion')
+    widgets = {
+      'nombre': forms.TextInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'telefono': forms.NumberInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+      'direccion': forms.TextInput(
+        attrs={
+          'class': 'form-control'
+        }
+      ),
+    }

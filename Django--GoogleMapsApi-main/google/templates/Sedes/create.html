@@ -8,11 +8,21 @@
         <div class="card" style="width:800px;">
             <div class="card-body">
                 <div class="text-center">
-                    <h2>Crear Empresa</h2>
+                    <h2>Crear sede</h2>
                 </div>
 
                 <form method="POST">
 							{% csrf_token %}
+                            <div class="form-group">
+                                <label>Seleccione la empresa</label>
+                                <select name="empresa" id="empresa" class="form-control">
+                                    {% for empresa in empresas %}
+                                        {% if empresa.estado%}
+                                            <option value="{{ empresa.nombre }}">{{ empresa.nombre }}</option>
+                                        {%endif%}
+                                    {% endfor %}
+                                </select>
+                            </div>
 							{{form.as_p}}
                             <div class="form-group">
                               <label>Ubicación de la empresa</label>
@@ -21,11 +31,6 @@
                                  <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
                                  {% endfor %}
                              </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de Fundación</label>
-                                <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion"
-                                       max="{% now 'Y-m-d' %}" required>
                             </div>
 							<button class="btn btn-default">
 								Enviar
