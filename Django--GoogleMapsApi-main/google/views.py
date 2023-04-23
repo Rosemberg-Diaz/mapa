@@ -91,7 +91,7 @@ def editarEmpresa(request, NIT):
             valor = int(nit)
             if valor not in range(100000000, 1000000000):
                 form.add_error('NIT', 'El NIT debe ser un número de 9 dígitos')
-                return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': valor})
+                return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': valor, 'empresa':empresa})
 
             post = form.save(commit=False)
             ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
@@ -101,11 +101,17 @@ def editarEmpresa(request, NIT):
             post.save()
             return redirect('geocode_club', empresa.NIT)
         else:
-            return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': NIT})
+            return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
     else:
         form = empresaForm(instance=empresa)
-        return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT})
+        return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
 
+
+def inactivarEmpresa(request, NIT):
+    empresa = get_object_or_404(Empresas, NIT=NIT)
+    empresa.estado = False
+    empresa.save()
+    return redirect('geocode_club', empresa.NIT)
 
 def geocode_club(request, pk):
     empresa = Empresas.objects.get(NIT=pk)
@@ -113,7 +119,6 @@ def geocode_club(request, pk):
     if empresa.direccion:
         # creating string of existing location data in database
         adress_string = str(empresa.direccion) + ', ' + str(empresa.ciudad) + ", Valle del Cauca, Colombia"
-        print(adress_string)
 
         # geocode the string
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
@@ -121,8 +126,6 @@ def geocode_club(request, pk):
         intermediate2 = json.loads(intermediate)
         latitude = intermediate2[0]['geometry']['location']['lat']
         longitude = intermediate2[0]['geometry']['location']['lng']
-        print(latitude)
-        print(longitude)
         # save the lat and long in our database
         empresa.latitude = latitude
         empresa.longitude = longitude

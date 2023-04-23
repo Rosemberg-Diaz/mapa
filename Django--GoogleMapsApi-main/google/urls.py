@@ -10,6 +10,7 @@ urlpatterns = [
    path('mydata',view.mydata, name="mydata"),
    path('crearEmpresa', view.crearEmpresa, name='crearEmpresa'),
    path('editarEmpresa/<NIT>', view.editarEmpresa, name='editarEmpresa'),
+   path('inactivarEmpresa/<NIT>', view.inactivarEmpresa, name='inactivarEmpresa'),
    path('crearSede', view.crearSede, name='crearSede'),
    path('listaEmp/', view.vistaListaEmpl, name='listaEmp'),
    path('crearEmp/', view.vistaCrearEmpl, name='crearEmp'),

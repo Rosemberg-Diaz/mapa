@@ -1,7 +1,7 @@
 {% extends 'google/base.html' %}
 {% block content %}
 {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'css/estiloCrear.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilo123.css' %}">
 
 <div style="text-align:center">
     <div style="display:flex; flex-direction:column; align-items:center;">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group">
                         <label>Fecha de Fundación</label>
-                        <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion" max="{% now 'Y-m-d' %}" value="{{ empresa.fechaFundacion }}">
+                        <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion" max="{% now 'Y-m-d' %}" value="{{ empresa.fechaFundacion|date:"Y-m-d" }}">
                     </div>
                     <button class="btn btn-default">
                         Guardar Cambios

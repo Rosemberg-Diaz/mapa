@@ -37,6 +37,14 @@
     });
 
     function updateSidebarContent(markerData) {
+      const editar = document.querySelector('#editar');
+      editar.addEventListener('click', function() {
+        window.location.href = 'editarEmpresa/'+markerData.NIT;
+      });
+      const inactivar = document.querySelector('#inactivar');
+      inactivar.addEventListener('click', function() {
+        window.location.href = 'inactivarEmpresa/'+markerData.NIT;
+      });
       $("#sidebar-title").text(markerData.nombre);
       $("#sidebar-description").text('* DESCRIPCIÓN: '+ markerData.descripcion);
       $("#sidebar-nit").text('* NIT: '+markerData.NIT);
@@ -83,11 +91,11 @@
     <div id="sidebar">
     <button class="btn btn-outline-danger" id="close-sidebar">Cerrar</button>
       <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
-      <div id="{{ empresa.NIT }}-info" class="info-container">
+      <div class="info-container">
 
-      <button class="edit-button" title="Editar">&#9998;</button>
+      <button class="edit-button" id="editar" title="Editar">&#9998;</button>
 
-      <button class="delete-button" title="Borrar">&#128465;</button>
+      <button class="delete-button" id="inactivar" title="Borrar">&#128465;</button>
 
       <h2 class="drawer-subtitulo">Acerca de:</h2>
 
