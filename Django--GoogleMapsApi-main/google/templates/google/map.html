@@ -38,7 +38,16 @@
 
     function updateSidebarContent(markerData) {
       $("#sidebar-title").text(markerData.nombre);
-      $("#sidebar-description").text(markerData.descripcion);
+      $("#sidebar-description").text('* DESCRIPCIÓN: '+ markerData.descripcion);
+      $("#sidebar-nit").text('* NIT: '+markerData.NIT);
+      $("#sidebar-mision").text('* MISIÓN: '+markerData.mision);
+      $("#sidebar-vision").text('* VISIÓN: '+markerData.vision);
+      $("#sidebar-telefono").text('* TELEFONO: '+markerData.telefono);
+      $("#sidebar-direccion").text('* DIRECCIÓN: '+markerData.direccion);
+      $("#sidebar-pagina").text(markerData.paginaWeb);
+      $("#sidebar-fecha").text('* FECHA DE FUNDACIÓN: '+markerData.fechaFundacion);
+      $("#sidebar-email").text('* EMAIL: '+markerData.email);
+      $("#sidebar-ciudad").text('* CIUDAD: '+markerData.ciudad);
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -80,46 +89,49 @@
 
       <button class="delete-button" title="Borrar">&#128465;</button>
 
-      <h4 class="drawer-title">{{ empresa.nombre }}</h4>
-
       <h2 class="drawer-subtitulo">Acerca de:</h2>
 
       <div class="drawer-content">
-        <p>DESCRIPCIÓN: {{ empresa.descripcion }}</p>
+        <p id="sidebar-description"></p>
       </div>
 
       <div class="drawer-content">
-          <P>* FECHA DE FUNDACIÓN: {{ empresa.fechaFundacion }}</P>
+          <p id="sidebar-fecha"></p>
       </div>
 
       <div class="drawer-content">
-        <p>* NIT: {{ empresa.NIT }}</p>
+        <p id="sidebar-nit"></p>
       </div>
 
       <div class="drawer-content">
-        <p>* SEDE: {{ sede.direccion }}</p>
+        <p id="sidebar-mision"></p>
       </div>
 
       <div class="drawer-content">
-        <p>* MISIÓN: {{ empresa.mision }}</p>
+        <p id="sidebar-vision"></p>
       </div>
 
       <div class="drawer-content">
-        <p>* VISIÓN: {{ empresa.vision }}</p>
+        <p id="sidebar-telefono"></p>
       </div>
+      <!--
+      <div class="drawer-content">
+        <p id="sidebar-ciudad"></p>
+      </div
+      -->
 
       <div class="drawer-content">
-        <p>* CONTACTO: {{ empresa.email }}</p>
+        <p id="sidebar-direccion"></p>
       </div>
+
+        <h2 class="drawer-subtitulo">Pagina oficial:</h2>
+        <div class="drawer-pagina">
+          <a id="sidebar-pagina" href="#" class="color-web"></a>
+        </div>
+
 
       <div class="drawer-content">
         <p>* ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</p>
-      </div>
-
-      <h2 class="drawer-subtitulo">Pagina oficial:</h2>
-
-      <div class="drawer-pagina">
-        <a  href="#" class="color-web">{{ empresa.paginaWeb }}</a>
       </div>
 
 

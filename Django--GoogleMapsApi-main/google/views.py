@@ -34,13 +34,12 @@ def crearEmpresa(request):
         details = empresaForm(request.POST)
         if details.is_valid():
             nit = request.POST['NIT']
-            if nit not in range(100000000, 1000000000):
+            if len(nit) != 9 or not nit.isdigit():
                 details.add_error('NIT', 'El NIT debe ser un número de 9 dígitos')
                 return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
-
             # if Empresas.objects.filter(NIT=nit).exists():
-            #     details.add_error('NIT', 'Ya existe una empresa con este NIT')
-            #     return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
+            #      details.add_error('NIT', 'Ya existe una empresa con este NIT')
+            #      return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
 
             post = details.save(commit=False)
             post.save()
@@ -144,6 +143,14 @@ def map(request):
 
 def mydata(request):
     result_list = list(Empresas.objects.values('nombre',
+                                               'descripcion',
+                                               'NIT',
+                                               'mision',
+                                               'vision',
+                                               'telefono',
+                                               'fechaFundacion',
+                                               'paginaWeb',
+                                               'direccion',
                                                'latitude',
                                                'longitude',
                                                ))
