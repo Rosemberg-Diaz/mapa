@@ -1,38 +1,36 @@
 {% extends 'google/base.html' %}
 {% block content %}
 {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'estiloCrear.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilo123.css' %}">
 
-<div style="text-align:center">
-    <div style="display:flex; flex-direction:column; align-items:center;">
-        <div class="card" style="width:800px;">
-            <div class="card-body">
-                <div class="text-center">
-                    <h2>Crear Empresa</h2>
+<div class="card">
+    <div class="card-body">
+            <div class="text-center">
+            <h2>Crear Empresa</h2>
+        </div>
+        <form method="POST" class="form_2_cols">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="form-group">
+                <div class="form-group">
+                    <label>Ubicación de la empresa</label>
+                    <select name="ciudad" id="ciudad" class="form-control">
+                        {% for ciudad in ciudades %}
+                        <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
-                <form method="POST">
-							{% csrf_token %}
-							{{form.as_p}}
-                            <div class="form-group">
-                              <label>Ubicación de la empresa</label>
-                              <select name="ciudad" id="ciudad" class="form-control">
-                                 {% for ciudad in ciudades %}
-                                 <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
-                                 {% endfor %}
-                             </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de Fundación</label>
-                                <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion"
-                                       max="{% now 'Y-m-d' %}" required>
-                            </div>
-							<button class="btn btn-default">
-								Enviar
-                            </button>
-                </form>
+                <div class="form-group">
+                    <label>Fecha de Fundación</label>
+                    <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion"
+                           max="{% now 'Y-m-d' %}" required>
+                </div>
+                <button class="btn btn-default">
+                    Enviar
+                </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}
