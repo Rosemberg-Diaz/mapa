@@ -55,16 +55,3 @@ var closeButton = document.getElementById("sidebar-close");
 if (closeButton) {
   closeButton.addEventListener("click", closeSidebar);
 }
-document.getElementById('inactivar').addEventListener('click', function(event) {
-  event.preventDefault();
-  document.getElementById('confirmationModal').style.display = 'flex';
-});
-
-document.getElementById('continueButton').addEventListener('click', function() {
-  // Aquí puedes agregar la lógica para eliminar la empresa
-  document.getElementById('confirmationModal').style.display = 'none';
-});
-
-document.getElementById('cancelButton').addEventListener('click', function() {
-  document.getElementById('confirmationModal').style.display = 'none';
-});

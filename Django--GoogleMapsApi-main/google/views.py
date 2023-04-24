@@ -89,7 +89,7 @@ def editarEmpresa(request, NIT):
         if form.is_valid():
             nit = request.POST['NIT']
             valor = int(nit)
-            if valor not in range(100000000, 1000000000):
+            if len(nit) != 9 or not nit.isdigit():
                 form.add_error('NIT', 'El NIT debe ser un número de 9 dígitos')
                 return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': valor, 'empresa':empresa})
 
