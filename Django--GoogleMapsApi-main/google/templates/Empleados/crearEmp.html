@@ -17,20 +17,28 @@
 
 <div class="card-body row">
 
-    <form>
-      <div class="row">
+    <form method="POST"  enctype="multipart/form-data">
+      <div class="row" >
+        <div class="col-md-6">
+          {% csrf_token %}
+          {{form.as_p}}
+        </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="nombre_completo">Nombre completo:</label>
-            <input type="text" class="form-control" placeholder="Ingrese nombre de empleado" id="nombre_completo">
+            <label for="uploadFromPC">Foto del empleado:</label>
+            <input type="file" name="uploadFromPC" id="uploadFromPC" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
           </div>
           <div class="form-group">
-            <label for="foto">Foto del empleado:</label>
-            <input type="file" class="form-control" id="foto">
+            <label for="video">Entrevista del empleado:</label>
+            <input type="file" name="video" id="video" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
           </div>
           <div class="form-group">
-            <label for="tipo_documento">Tipo de documento:</label>
-            <select class="form-control" id="tipo_documento">
+            <label for="pdf">Permisos de visualización de la entrevista:</label>
+            <input type="file" name="pdf" id="pdf" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
+          </div>
+          <div class="form-group">
+            <label for="tipoDoc">Tipo de documento:</label>
+            <select class="form-control" id="tipoDoc">
               <option value="">Seleccionar tipo</option>
               <option value="CC">Cédula de ciudadanía</option>
               <option value="CE">Cédula de extranjería</option>
@@ -38,40 +46,9 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="numero_documento">Número de documento:</label>
-            <input type="text" class="form-control" placeholder="Ingrese número de documento" id="numero_documento">
-          </div>
-          <div class="form-group">
-            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-            <input type="date" class="form-control" id="fecha_nacimiento">
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="rol">Rol en la empresa:</label>
-            <select class="form-control" id="rol">
-              <option value="">Seleccionar rol</option>
-              <option value="Gerente">Gerente</option>
-              <option value="Empleado">Empleado</option>
-              <option value="Practicante">Practicante</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="tiempo_en_empresa">Tiempo en la empresa:</label>
-            <select class="form-control" id="tiempo_en_empresa">
-              <option value="">Seleccionar en años</option>
-              <option value="1">1 año</option>
-              <option value="2">2 años</option>
-              <option value="3">3 años
-                </option>
-              <option value="4">4 años</option>
-              <option value="5">5 años</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="telefono">Número telefónico :</label>
-            <input type="text" class="form-control" placeholder="Ingrese número telefónico" id="telefono">
+            <label for="fechaNacimiento">Fecha de nacimiento:</label>
+            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento"
+                                       max="{% now 'Y-m-d' %}">
           </div>
           <div class="form-group">
             <label for="estado">Estado en la empresa:</label>
@@ -81,13 +58,12 @@
               <option value="Inactivo">Inactivo</option>
             </select>
           </div>
-          <button type="button" class="btn btn-primary btn-rounded mb-2">Subir video</button>
-          <div class="form-group">
-            <button type="button" class="btn btn-primary btn-rounded mb-2">Subir permiso</button>
-            <button type="submit" class="btn btn-success btn-rounded mb-2">Crear empleado</button>
-          </div>
+
         </div>
-      </div>
+        </div>
+      <button class="btn btn-default">
+								Enviar
+                            </button>
     </form>
 
 

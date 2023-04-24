@@ -22,3 +22,9 @@ class empresaForm(forms.ModelForm):
     model = Empresas
     fields = ('NIT', 'nombre', 'mision', 'vision', 'direccion', 'descripcion', 'email', 'paginaWeb')
 
+class empleadoForm(forms.ModelForm):
+  class Meta:
+    model = Empleados
+    fields = ('nombres', 'apellidos', 'telefono', 'email', 'documento', 'cargo', 'estado','experiencia','experienciaCargo')
+
+

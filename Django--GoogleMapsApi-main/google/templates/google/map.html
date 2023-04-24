@@ -37,8 +37,10 @@
     });
 
     function updateSidebarContent(markerData) {
+      let emp = markerData.nombre;
       $("#sidebar-title").text(markerData.nombre);
       $("#sidebar-description").text(markerData.descripcion);
+      document.getElementById('personal_link').setAttribute('onclick', 'openSidebar(\'/listaEmp/'+emp+'\')');
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -64,7 +66,7 @@
       <form class="d-flex position-relative ms-auto me-auto">
       <button type="button" class="btn btn-outline-warning"><a class="no-underline text-white" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
       </form>
-      <a class="navbar-text text-white d-flex align-items-center" href="#">Salir<iclass="bi bi-arrow-bar-left ms-1"></i></a>
+      <a class="navbar-text text-white d-flex align-items-center" href="#">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
     </div>
   </div>
 </nav>
@@ -75,8 +77,8 @@
     <button class="btn btn-outline-danger" id="close-sidebar">Cerrar</button>
       <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
       <p id="sidebar-description">Aquí poner empresas</p>
-      <center><button class="btn btn-outline-primary" onclick="openSidebar('/listaEmp/')">Ver personal</button></center>
-    </div>
+      <center><button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button></center>
+     </div>
     <div id="nuevo-sidebar" style="display: none;">
         <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
         <div id="sidebar-content"></div>

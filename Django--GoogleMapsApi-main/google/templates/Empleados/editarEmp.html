@@ -1,5 +1,5 @@
 {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'lore.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lore.css' %}" xmlns="http://www.w3.org/1999/html">
 
 <div class="container">
   <div class="row">
@@ -12,50 +12,25 @@
           <div class="col-3"><button class="btn btn-success"><i class="bi bi-check"></i></button></div>
           <div class="col-4"><img src="{% static 'img/empresa.png' %}"  width="100" alt="Logo de la empresa"></div>
         </div>
-      <!-- Nombre del empleado -->
-      <div class="form-group d-flex flex-column align-items-center">
-        <img src="{% static 'img/empleado.png' %}" alt="Imagen del empleado" width="80">
-        <label for="nombre">Nombre del empleado</label>
-        <input type="text" class="form-control texto-rojo" id="nombre" value="Juan Pepito">
-      </div>
-      <!-- Rol que desempeña -->
-      <div class="form-group">
-        <label for="rol">Rol que desempeña</label>
-        <input type="text" class="form-control texto-gris" id="rol" value="Product Manager ">
-      </div>
-      <!-- Tiempo en el rol -->
-      <div class="form-group">
-        <label for="tiempo">Tiempo en el rol</label>
-        <input type="text" class="form-control texto-gris" id="tiempo" value="16 años">
-      </div>
-      <!-- Formación y conocimientos -->
-      <div class="form-group">
-        <label for="formacion">Formación y conocimientos</label>
-        <textarea class="form-control texto-gris" id="formacion" rows="3">Estudió en la universidad San Buenaventura de Cartagena...</textarea>
-      </div>
-      <!-- Botón de cargar un video -->
-      <div class="form-group">
-        <label for="video">Cargar un video</label>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="video">
-          <label class="custom-file-label" for="video">Seleccionar archivo</label>
-        </div>
-      </div>
-      <!-- Título del video -->
-      <div class="form-group">
-        <label for="titulo">Título del video</label>
-        <input type="text" class="form-control texto-rojo" id="titulo" value="¿Quieres conocer...">
-      </div>
-      <!-- Descripción del video -->
-      <div class="form-group">
-        <label for="descripcion">Descripción del video</label>
-        <textarea class="form-control texto-gris" id="descripcion" rows="3">#ConozcamosMejorAPepito</textarea>
-      </div>
-      <!-- Imagen de un video de ejemplo -->
-      <div class="form-group">
-
-        <img src="{% static 'img/video2.avif' %}" alt="Video de ejemplo" class="img-fluid p-0">
-      </div>
+      <form method="POST"  enctype="multipart/form-data">
+      {% csrf_token %}
+          {{form.as_p}}
+        <div class="form-group">
+            <label for="uploadFromPC">Foto del empleado:</label>
+            <input type="file" name="uploadFromPC" id="uploadFromPC" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
+          </div>
+          <div class="form-group">
+            <label for="video">Entrevista del empleado:</label>
+            <input type="file" name="video" id="video" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
+          </div>
+          <div class="form-group">
+            <label for="pdf">Permisos de visualización de la entrevista:</label>
+            <input type="file" name="pdf" id="pdf" class="myButton" title="Upload From PC" value= "Upload from PC" onchange="uploadPC()" style="float:left;">
+          </div>
+        <button class="btn btn-default">
+								Enviar
+                            </button>
+    </form>
     </div>
   </div>
 </div>

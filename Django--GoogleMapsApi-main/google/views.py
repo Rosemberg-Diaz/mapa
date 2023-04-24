@@ -11,6 +11,16 @@ from django.core import serializers
 import requests
 import json
 import urllib
+import base64
+
+
+def encode_file(file):
+    # Lee los datos del archivo
+    data = file.read()
+    # Codifica los datos en Base64
+    encoded_data = base64.b64encode(data)
+    encoded_string = encoded_data.decode('utf-8')
+    return (encoded_string)
 
 # Create your views here.
 
@@ -107,22 +117,121 @@ def mydata(request):
     result_list = list(Empresas.objects.values('nombre',
                         'latitude',
                         'longitude',
+                        'NIT',
                         ))
 
     return JsonResponse(result_list, safe=False)
 
 
-def vistaListaEmpl(request):
-    return render(request, "google/listaEmp.html")
+def vistaListaEmpl(request, rest):
+    emp = Empresas.objects.get(nombre=rest)
+    empleados = Empleados.objects.filter(empresa=emp)
+    context = {
+        'emp': rest,
+        'empleados': empleados,
+    }
+    return render(request, "google/listaEmp.html", context=context)
 
 
-def vistaCrearEmpl(request):
-    return render(request, "Empleados/crearEmp.html")
+def vistaCrearEmpl(request, rest):
+    if request.method == 'POST':
+
+        # Pass the form data to the form class
+        details = empleadoForm(request.POST, request.FILES)
+        # In the 'form' class the clean function
+        # is defined, if all the data is correct
+        # as per the clean function, it returns true
+        if details.is_valid():
+            # Temporarily make an object to be add some
+            # logic into the data if there is such a need
+            # before writing to the database
+            post = details.save(commit=False)
+            imagen = encode_file(request.FILES['uploadFromPC'])
+            # Finally write the changes into database
+            post.save()
+            p = Empleados.objects.get(documento=request.POST['documento'])
+            emp = Empresas.objects.get(nombre=rest)
+            p.imagen = imagen
+            if (request.POST['video']!=''):
+                entrevista = encode_file(request.FILES['video'])
+                permisos = encode_file(request.FILES['pdf'])
+                p.entrevista = entrevista
+                p.permiso = permisos
+            p.empresa = emp
+            p.save()
+            # redirect it to some another page indicating data
+            # was inserted successfully
+            return redirect('map')
+
+        else:
+
+            # Redirect back to the same page if the data
+            # was invalid
+            return render(request, "Empleados/crearEmp.html", {'form': details})
+    else:
+
+        # If the request is a GET request then,
+        # create an empty form object and
+        # render it into the page
+        form = empleadoForm(None)
+        return render(request, 'Empleados/crearEmp.html', {'form': form})
 
 
-def vistaEditarEmpl(request):
-    return render(request, "Empleados/editarEmp.html")
+def vistaEditarEmpl(request, rest, ced):
+    p = Empleados.objects.get(documento=ced)
+    if request.method == "POST":
+        form = empleadoForm(request.POST, request.FILES, instance=p)
+
+        if form.is_valid():
+            p.nombres = request.POST['nombres']
+            p.apellidos = request.POST['apellidos']
+            p.experiencia = request.POST['experiencia']
+            p.telefono = request.POST['telefono']
+            p.email = request.POST['email']
+            p.documento = request.POST['documento']
+            p.cargo = request.POST['cargo']
+            p.estado = request.POST['estado']
+            p.experiencia = request.POST['experiencia']
+            p.experienciaCargo = request.POST['experienciaCargo']
+            p.tipoDoc = request.POST['tipoDoc']
+            p.fechaNacimiento = request.POST['fechaNacimiento']
+            p.estado = request.POST['estado']
+            if (request.POST['uploadFromPC'] != ''):
+                imagen = encode_file(request.FILES['uploadFromPC'])
+                p.imagen = imagen
+            if (request.POST['video'] != ''):
+                entrevista = encode_file(request.FILES['video'])
+                permisos = encode_file(request.FILES['pdf'])
+                p.entrevista = entrevista
+                p.permiso = permisos
+            p.save()
+            return redirect('map')
+        else:
+            form = empleadoForm(instance=p)
+            return render(request, 'Empleados/editarEmp.html', {'form': form, 'emp':p})
+    else:
+        form = empleadoForm(instance=p)
+        return render(request, "Empleados/editarEmp.html", {'form': form, 'emp':p})
 
 
-def vistaVerEmpl(request):
-    return render(request, "Empleados/verPersonal.html")
+
+def vistaVerEmpl(request, rest, ced):
+    empleados = Empleados.objects.get(documento=ced)
+    context = {
+        'emp': rest,
+        'empleado': empleados,
+    }
+    return render(request, "Empleados/verPersonal.html", context=context)
+
+def estadoEmp(request, rest, ced):
+    empleados = Empleados.objects.get(documento=ced)
+    context = {
+        'emp': rest,
+        'empleado': empleados,
+    }
+    if(empleados.estado == 'Activo'):
+        empleados.estado = 'Inactivo'
+    else:
+        empleados.estado = 'Activo'
+    empleados.save()
+    return redirect('map')
