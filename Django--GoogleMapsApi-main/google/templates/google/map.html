@@ -57,16 +57,16 @@
       });
 
       $("#sidebar-title").text(markerData.nombre);
-      $("#sidebar-description").text('* DESCRIPCIÓN: '+ markerData.descripcion);
-      $("#sidebar-nit").text('* NIT: '+markerData.NIT);
-      $("#sidebar-mision").text('* MISIÓN: '+markerData.mision);
-      $("#sidebar-vision").text('* VISIÓN: '+markerData.vision);
-      $("#sidebar-telefono").text('* TELEFONO: '+markerData.telefono);
-      $("#sidebar-direccion").text('* DIRECCIÓN: '+markerData.direccion);
+      $("#sidebar-description").text('DESCRIPCIÓN: '+ markerData.descripcion);
+      $("#sidebar-nit").text('NIT: '+markerData.NIT);
+      $("#sidebar-mision").text('MISIÓN: '+markerData.mision);
+      $("#sidebar-vision").text('VISIÓN: '+markerData.vision);
+      $("#sidebar-telefono").text('TELEFONO: '+markerData.telefono);
+      $("#sidebar-direccion").text('DIRECCIÓN: '+markerData.direccion);
       $("#sidebar-pagina").text(markerData.paginaWeb);
-      $("#sidebar-fecha").text('* FECHA DE FUNDACIÓN: '+markerData.fechaFundacion);
-      $("#sidebar-email").text('* EMAIL: '+markerData.email);
-      $("#sidebar-ciudad").text('* CIUDAD: '+markerData.ciudad);
+      $("#sidebar-fecha").text('FECHA DE FUNDACIÓN: '+markerData.fechaFundacion);
+      $("#sidebar-email").text('EMAIL: '+markerData.email);
+      $("#sidebar-ciudad").text('CIUDAD: '+markerData.ciudad);
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -90,7 +90,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <form class="d-flex position-relative ms-auto me-auto">
-      <button type="button" class="btn btn-outline-warning"><a class="no-underline text-white" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
+      <button type="button" class="btn"><a class="text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
       </form>
       <a class="navbar-text text-white d-flex align-items-center" href="#">Salir<iclass="bi bi-arrow-bar-left ms-1"></i></a>
     </div>
@@ -100,71 +100,44 @@
 <div class="pageholder">
   <div class="linkholder">
     <div id="sidebar">
-    <button class="btn btn-outline-danger" id="close-sidebar">Cerrar</button>
+    <button class="icon-cancel" title="Cerrar" id="close-sidebar"></button>
       <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
       <div class="info-container">
 
-      <button class="edit-button" id="editar" title="Editar">&#9998;</button>
+      <button class="icon-pencil" id="editar" title="Editar" onclick="openSidebar('/editarEmpresa/')"></button>  
+      <button type="button" class="icon-block" id="inactivar" title="Borrar"></button>
 
-        <button type="button" class="delete-button" id="inactivar" title="Borrar">&#128465;</button>
-
-<div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
-  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
-    <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar una empresa. ¿Deseas continuar?</p>
-    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-      <button type="button" id="continueButton" style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Continuar</button>
-      <button type="button" id="cancelButton" style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-
+        <div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
+          <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar una empresa. ¿Deseas continuar?</p>
+          <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+            <button type="button" id="continueButton" style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Continuar</button>
+            <button type="button" id="cancelButton" style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Cancelar</button>
+          </div>
+        </div>
+      </div>
 
       <h2 class="drawer-subtitulo">Acerca de:</h2>
-
+      
       <div class="drawer-content">
-        <p id="sidebar-description"></p>
-      </div>
-
-      <div class="drawer-content">
-          <p id="sidebar-fecha"></p>
-      </div>
-
-      <div class="drawer-content">
-        <p id="sidebar-nit"></p>
-      </div>
-
-      <div class="drawer-content">
-        <p id="sidebar-mision"></p>
-      </div>
-
-      <div class="drawer-content">
-        <p id="sidebar-vision"></p>
-      </div>
-
-      <div class="drawer-content">
-        <p id="sidebar-telefono"></p>
-      </div>
-      <!--
-      <div class="drawer-content">
-        <p id="sidebar-ciudad"></p>
-      </div
-      -->
-
-      <div class="drawer-content">
-        <p id="sidebar-direccion"></p>
+        <ul>
+          
+          <li id="sidebar-nit"></li>
+          <li id="sidebar-fecha"></li>
+          <li id="sidebar-description"></li>
+          <li id="sidebar-mision"></li>
+          <li id="sidebar-vision"></li>
+          <li id="sidebar-telefono"></li>
+          <li id="sidebar-direccion"></li>
+          <!--<li id="sidebar-ciudad"></li>-->
+          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
+        </ul>
       </div>
 
         <h2 class="drawer-subtitulo">Pagina oficial:</h2>
         <div class="drawer-pagina">
           <a id="sidebar-pagina" href="#" class="color-web"></a>
         </div>
-
-
-      <div class="drawer-content">
-        <p>* ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</p>
-      </div>
-
 
     </div>
       <center><button class="btn btn-outline-primary" onclick="openSidebar('/listaEmp/')">Ver personal</button></center>

@@ -1,160 +1,141 @@
 .pageholder {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .title2 {
+    color: white;
+  }
+  
+  .title2:hover {
+    color: rgb(2, 0, 20);
+  }
 
-.title2 {
-  color: white;
-}
+  .titleholder,
+  .linkholder {
+    display: flex;
+    margin-top: 10px;
+    width: 98%;
+    border-radius: 5px;
+    justify-content: space-between;
+  }
 
-.title2:hover {
-  color: rgb(2, 0, 20);
-}
+  .ourbutton {
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+  
+    background-color: rgb(0, 0, 80);
+    color: white;
+  }
 
-.titleholder,
-.linkholder {
-  display: flex;
-  margin-top: 10px;
-  width: 98%;
-  border-radius: 5px;
-  justify-content: space-between;
-}
-.ourbutton {
-  margin-right: 10px;
-  margin-left: 10px;
-  border-radius: 5px;
+  #editar {
+    border: none;
+    background: none;
+ }
 
-  background-color: rgb(0, 0, 80);
-  color: white;
-}
+ #close-sidebar {
+    border: none;
+    background: none;
+ }
 
-.ourbutton:hover {
-  margin-right: 10px;
-  background-color: rgb(142, 142, 142);
-  color: white;
-}
+ #inactivar {
+    border: none;
+    background: none;
+ }
 
-.titleholder {
-  display: "flex";
-  justify-content: "space-between";
-  background-color: #4267b2;
-  align-items: center;
-  height: 40px;
-}
+ .ourbutton:hover {
+    margin-right: 10px;
+    background-color: rgb(142, 142, 142);
+    color: white;
+  }
 
-.linkholder {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  justify-content: space-around;
-}
+  .titleholder {
+    display: "flex";
+    justify-content: "space-between";
+    background-color: #4267b2;
+    align-items: center;
+    height: 40px;
+  }
 
-.title {
-  color: white;
-  margin-left: 10px;
-  font-weight: bold;
-  font-size: 15px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
+  .linkholder {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    justify-content: space-around;
+  }
+  
+  .title {
+    color: white;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-.linkbox {
-  display: flex;
-  width: 20%;
-  height: 50px;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
+  .linkbox {
+    display: flex;
+    width: 20%;
+    height: 50px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
 
-.myTable2 {
-  font-size: 12px;
-  width: 98%;
-  margin-left: 1%;
-  margin-right: 1%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  min-width: 400px;
-  overflow: hidden;
-  border-radius: 7px 7px 0 0;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
+  .myTable2 {
+    font-size: 12px;
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    min-width: 400px;
+    overflow: hidden;
+    border-radius: 7px 7px 0 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
 
-.myTable2 th {
-  background-color: #2d323e;
-  color: white;
-  font-weight: bold;
-}
+  .myTable2 th {
+    background-color: #2d323e;
+    color: white;
+    font-weight: bold;
+  }
 
-.myTable2 td,
-.myTable th {
-  border: 0.01em solid #e3e2e2;
-}
+  .myTable2 td,
+  .myTable th {
+    border: 0.01em solid #e3e2e2;
+  }
+  
+  .myTable2 tr:nth-child(even) {
+    background-color: #f9f8f8;
+  }
 
-.myTable2 tr:nth-child(even) {
-  background-color: #f9f8f8;
-}
-
-.mapholder {
-  height: 1000px;
-  width: 100%;
-  position: relative;
-}
-
-#map {
-  height: 100%;
-  width: 100%;
-}
-
-#sidebar {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 300px;
-  height: 100%;
-  background-color: white;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  display: none;
-  z-index: 1; /* nivel superior al mapa */
-}
-
-#sidebar-title {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-#sidebar-description {
-  font-size: 16px;
-}
-
-@media only screen and (max-width: 767px) {
   .mapholder {
-    margin-right: 0;
+    height: 1000px;
+    width: 100%;
+    position: relative;
+  }
+
+  #map {
+    height: 100%;
+    width: 100%;
   }
 
   #sidebar {
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background-color: white;
-    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
+    right: 0;
+    width: 460px;
+    height: 100%;
+    background-color: rgba(237, 233, 233, 0.87);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     display: none;
+    z-index: 1; /* nivel superior al mapa */
   }
-  #sidebar-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-}
-

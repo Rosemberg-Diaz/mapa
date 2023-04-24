@@ -8,3 +8,5 @@ Ya esta probada la funcionalidad de conversion de direccion a longitud y latitud
 Asi que si voy a agregar una direccion por ejemplo de Cali. Debo escribir la direccion correctamente y seleccionar en el listado de ciudades Cali. (Equipo Rosemberg Daniel Diaz)
 
 Funcional sidebar, NavBar, sidebarEmpleados (Equipo Juan Camilo Clavijo, Daniel loaiza y Cesar Murillos)
+
+Visualización de los marcadores, Vista de inhabilitar empresa, estilo crear y editar, arreglos - Pendiente error de carga (Editar) (Equipo: Alejandro Rosas y María Jose Ospina)
