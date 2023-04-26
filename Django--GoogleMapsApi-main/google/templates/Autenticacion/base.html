@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"> -->
+	<link href='https://unpkg.com/css.gg@2.0.0/icons/css/attribution.css' rel='stylesheet'>
+	<link href='https://unpkg.com/css.gg@2.0.0/icons/css/youtube.css' rel='stylesheet'>
+	<link href='https://unpkg.com/css.gg@2.0.0/icons/css/facebook.css' rel='stylesheet'>
+	<link href='https://unpkg.com/css.gg@2.0.0/icons/css/twitter.css' rel='stylesheet'>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}">
+	<title>Lading Page</title>
+</head>
+
+<body>
+	<header>
+		<i class="gg-attribution"></i>
+		<nav>
+			<button class="btn-login"><a href="{% url 'login' %} "> Iniciar Sesion</a></button>
+			<button class="btn-register"><a href="{% url 'registro' %}"> Registro </a></button>
+		</nav>
+	</header>
+	<main>
+		<section class="hero">
+			<div class="hero-title">
+				<h1>
+					Descubre las empresas <br> Ubicadas en el Valle del Cauca
+				</h1>
+				<div class="parrafo-hero">
+					<p>Explora la innovación tecnológica del Valle del Cauca con nosotros</p>
+				</div>
+			</div>
+			<div class="img-container">
+				<img src="static/img/designer-girl.svg" alt="una chica diseñando">
+			</div>
+		</section>
+
+		<!-- INICIO DE LA SECCION DE CARDS -->
+
+		<section class="services">
+			<div class="service-title">
+				<h2>
+					Explora el mundo del desarrollo de software en el Valle del Cauca
+				</h2>
+			</div>
+			<div class="card-service">
+				<img src="static/img/team.svg" alt="equipo de trabajo">
+				<h2>Explora empresas</h2>
+				<p>Encuentra empresas de software en el Valle del Cauca y explora sus perfiles y detalles.</p>
+			</div>
+
+			<div class="card-service">
+				<img src="static/img/developer.svg" alt="a developer thinking">
+				<h2>Explora empleados</h2>
+				<p>Descubre empleados talentosos de estas empresas y conoce sus habilidades y experiencia.</p>
+			</div>
+
+			<div class="card-service">
+				<img src="static/img/think.svg" alt="equipo de trabajo">
+				<h2>Diseño Responsive</h2>
+				<p>Disfruta de una experiencia óptima en cualquier dispositivo, ya sea en computadora o móvil.</p>
+			</div>
+
+		</section>
+	</main>
+</body>
+</html>

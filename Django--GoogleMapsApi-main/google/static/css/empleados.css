@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css?family=Inter&display=swap");
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+button.btn {
+  margin-right: 10px;
+}
+
+button.btn-rounded {
+  border-radius: 30px;
+}
+
+/* Estilos para los campos */
+.form-control {
+  background-color: #eeeded;
+  border: 2px solid #000000;
+  border-radius: 30px;
+  color: #7d6f6f;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: Inter, sans-serif;
+  text-align: center;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.form-control2 {
+  background-color: #eeeded;
+  border: 2px solid #000000;
+  border-radius: 30px;
+  color: #7d6f6f;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: Inter, sans-serif;
+  text-align: center;
+}
+
+.form-control2:focus {
+  box-shadow: none;
+}
+
+.form-control2,
+select.form-control2 {
+  height: 40px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 30px;
+  background-color: #eeeded;
+  color: #7d6f6f;
+  padding-right: 35px;
+}
+
+.form-control,
+select.form-control {
+  height: 40px;
+  width: 95%;
+  border: 1px solid black;
+  border-radius: 30px;
+  background-color: #eeeded;
+  color: #7d6f6f;
+  padding-right: 35px;
+}
+
+select.form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23000' d='M0 2l4 4 4-4H0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center right 10px;
+  background-size: contain;
+  background-size: 25px;
+}
+
+texto-gris {
+  color: #4d555c;
+  font-family: Inter, sans-serif;
+}
+
+.texto-azul {
+  color: #0074d9;
+  font-family: Inter, sans-serif;
+}
+
+.font {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+}
+
+.card {
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+  /*opacity: 0.6;*/
+  overflow: hidden;
+  margin: 0 auto;
+  width: 90%;
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
