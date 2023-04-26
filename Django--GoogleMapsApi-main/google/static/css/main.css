@@ -138,6 +138,7 @@
     padding: 20px;
     display: none;
     z-index: 1; /* nivel superior al mapa */
+    overflow: auto;
   }
 
 
