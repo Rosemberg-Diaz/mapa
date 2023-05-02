@@ -3,8 +3,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+<<<<<<< Updated upstream
     width: 100%;
     height: 100%;
+=======
+>>>>>>> Stashed changes
   }
   
   .title2 {
@@ -17,10 +20,17 @@
 
   .titleholder,
   .linkholder {
+<<<<<<< Updated upstream
     display: flex;
     margin-top: 10px;
     width: 98%;
     border-radius: 5px;
+=======
+    display: block;
+    margin-top: 0px;
+    width: 100%;
+    border-radius: 0px;
+>>>>>>> Stashed changes
     justify-content: space-between;
   }
 
@@ -28,7 +38,10 @@
     margin-right: 10px;
     margin-left: 10px;
     border-radius: 5px;
+<<<<<<< Updated upstream
   
+=======
+>>>>>>> Stashed changes
     background-color: rgb(0, 0, 80);
     color: white;
   }
@@ -117,7 +130,11 @@
   }
 
   .mapholder {
+<<<<<<< Updated upstream
     height: 1000px;
+=======
+    height: 850px;
+>>>>>>> Stashed changes
     width: 100%;
     position: relative;
   }
@@ -127,6 +144,7 @@
     width: 100%;
   }
 
+<<<<<<< Updated upstream
   #sidebar {
     position: fixed;
     bottom: 0;
@@ -141,6 +159,29 @@
     overflow: auto;
   }
 
+=======
+#sidebar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 900px; /* añadido: establece una anchura máxima */
+  max-height: 70%; /* añadido: establece una altura máxima */
+  background-color: white;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  display: none;
+  z-index: 1; /* nivel superior al mapa */
+  overflow: auto;
+  margin: auto; /* añadido: centrar horizontal y verticalmente */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 1%;
+}
+>>>>>>> Stashed changes
 
 @media only screen and (max-width: 767px) {
   .mapholder {
@@ -148,6 +189,7 @@
   }
 
   #sidebar {
+<<<<<<< Updated upstream
     position: fixed;
     bottom: 0;
     left: 0;
@@ -157,5 +199,26 @@
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     display: none;
+=======
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 90%;
+    height: 90%;
+    max-width: 500px; /* añadido: establece una anchura máxima */
+    max-height: 70%; /* añadido: establece una altura máxima */
+    background-color: white;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    display: none;
+    z-index: 1; /* nivel superior al mapa */
+    overflow: auto;
+    margin: auto; /* añadido: centrar horizontal y verticalmente */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 2%;
+>>>>>>> Stashed changes
   }
 }

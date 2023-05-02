@@ -16,8 +16,8 @@
 
   function initMap(data) {
     const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 7,
-      center: { lat: 3.933215078541915, lng: -76.56998432650508 },
+      zoom: 12,
+      center: { lat: 3.43722, lng: -76.5225 },
     });
     const infoWindow = new google.maps.InfoWindow();
     const markers = data?.map((i) => {
@@ -99,7 +99,11 @@
     <div class="collapse navbar-collapse" id="navbarText">
       {% if user.rol == 'Administrador' %}
       <form class="d-flex position-relative ms-auto me-auto">
+<<<<<<< Updated upstream
       <button type="button" class="btn"><a class="text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
+=======
+      <button type="button" class="btn btn-outline-primary"><a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
+>>>>>>> Stashed changes
       </form>
 
       <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
@@ -115,12 +119,21 @@
 <div class="pageholder">
   <div class="linkholder">
     <div id="sidebar">
+<<<<<<< Updated upstream
     <button class="icon-cancel" title="Cerrar" id="close-sidebar"></button>
       <h3 style="padding-top:10%" id="sidebar-title">Aquí poner empresas</h3>
       <div class="info-container">
       {% if user.rol == 'Administrador' %}
       <button class="icon-pencil" id="editar" title="Editar" ></button>
       <button type="button" class="icon-block" id="inactivar" title="Borrar"></button>
+=======
+      <h3 style="padding-top:2%" id="sidebar-title">Aquí poner empresas</h3>
+      <div class="info-container">
+      <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
+      {% if user.rol == 'Administrador' %}
+      <button class="icon-pencil" style="color:orange" id="editar" title="Editar" ></button>
+      <button type="button" class="icon-block" style="color:red" id="inactivar" title="Borrar"></button>
+>>>>>>> Stashed changes
       {% else %}
         <button class="icon-pencil" id="editar" title="Editar" style="display:none;"></button>
         <button type="button" class="icon-block" id="inactivar" title="Borrar" style="display:none;"></button>
@@ -159,16 +172,29 @@
         </div>
 
     </div>
+<<<<<<< Updated upstream
        <center><button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button></center>
     </div>
     <div id="nuevo-sidebar" style="display: none;" >
         <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
+=======
+    <br>
+       <center><button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button></center>
+    </div>
+
+
+    <div id="nuevo-sidebar" style="display: none;" >
+     <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
+>>>>>>> Stashed changes
         <div id="sidebar-content"></div>
     </div>
     <div class="mapholder">
       <div id="map"></div>
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
       <script
         src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap&v=weekly"
         defer
