@@ -10,27 +10,16 @@ function openSidebar(nombre) {
       sidebarContent.innerHTML = html;
     });
 
-<<<<<<< Updated upstream
-  sidebar.style.width = "250px";
-  sidebar.style.position = "fixed";
-  sidebar.style.top = "0";
-  sidebar.style.right = "0";
-  sidebar.style.width = "400px";
-  sidebar.style.height = "100%";
-=======
   sidebar.style.width = "460px";
   sidebar.style.height = "70%";
   sidebar.style.position = "fixed";
   sidebar.style.top = "15%";
   sidebar.style.right = "20%";
->>>>>>> Stashed changes
   sidebar.style.backgroundColor = "#f1f1f1";
   sidebar.style.padding = "20px";
   sidebar.style.display = "block";
   sidebar.style.zIndex = "9999";
   sidebar.style.overflowY = "scroll";
-<<<<<<< Updated upstream
-=======
 
   // Verificar el ancho de la ventana y modificar los estilos del sidebar en consecuencia
   if (window.innerWidth <= 600) {
@@ -39,7 +28,6 @@ function openSidebar(nombre) {
     sidebar.style.top = "0";
     sidebar.style.right = "0";
   }
->>>>>>> Stashed changes
 }
 
 function openSidebarCrearEmp(nombre) {
