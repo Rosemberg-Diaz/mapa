@@ -59,7 +59,7 @@ def crearEmpresa(request):
             post.save()
             p = Empresas.objects.get(NIT=request.POST['NIT'])
             ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
-            p.estado = True
+            p.estado = "Activo"
             p.ciudad = ciudad
             p.save()
             # redirect it to some another page indicating data
@@ -179,9 +179,11 @@ def vistaCrearEmpl(request, rest):
 
 def vistaEditarEmpl(request, rest, ced):
     p = Empleados.objects.get(documento=ced)
+    print(p)
     if request.method == "POST":
+        print("Entro 1")
         form = empleadoForm(request.POST, request.FILES, instance=p)
-
+        print(request.POST['nombres'])
         if form.is_valid():
             p.nombres = request.POST['nombres']
             p.apellidos = request.POST['apellidos']
@@ -190,12 +192,9 @@ def vistaEditarEmpl(request, rest, ced):
             p.email = request.POST['email']
             p.documento = request.POST['documento']
             p.cargo = request.POST['cargo']
-            p.estado = request.POST['estado']
             p.experiencia = request.POST['experiencia']
             p.experienciaCargo = request.POST['experienciaCargo']
-            p.tipoDoc = request.POST['tipoDoc']
-            p.fechaNacimiento = request.POST['fechaNacimiento']
-            p.estado = request.POST['estado']
+            print("Entro")
             if (request.POST['uploadFromPC'] != ''):
                 imagen = encode_file(request.FILES['uploadFromPC'])
                 p.imagen = imagen
@@ -204,6 +203,8 @@ def vistaEditarEmpl(request, rest, ced):
                 permisos = encode_file(request.FILES['pdf'])
                 p.entrevista = entrevista
                 p.permiso = permisos
+            print("Entro")
+            print(p)
             p.save()
             return redirect('map')
         else:

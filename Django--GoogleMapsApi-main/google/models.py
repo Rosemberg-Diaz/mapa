@@ -56,4 +56,4 @@ class Empleados(models.Model):
         db_table = 'Empleados'
 
     def __str__(self):
-        return self.nombre
+        return self.documento

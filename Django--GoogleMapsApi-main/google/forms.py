@@ -25,6 +25,6 @@ class empresaForm(forms.ModelForm):
 class empleadoForm(forms.ModelForm):
   class Meta:
     model = Empleados
-    fields = ('nombres', 'apellidos', 'telefono', 'email', 'documento', 'cargo', 'estado','experiencia','experienciaCargo')
+    fields = ('nombres', 'apellidos', 'telefono', 'email', 'documento', 'cargo','experiencia','experienciaCargo')
 
 
