@@ -84,33 +84,48 @@
 
 </script>
 <header>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Empresas</a>
-    {% if user.rol == 'Administrador' %}
-    <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
-    {% else %}
-    <span class="navbar-text text-white d-flex align-items-center">Bienvenido {{ user.username }}</span>
-    {% endif %}
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Empresas</a>
       {% if user.rol == 'Administrador' %}
-      <form class="d-flex position-relative ms-auto me-auto">
-      <button type="button" class="btn btn-outline-primary"><a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
-      </form>
-
-      <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
+      <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
       {% else %}
-      <div class="navbar-nav ms-auto">
-        <a class="navbar-text text-white" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
-      </div>
+      <span class="navbar-text text-white d-flex align-items-center">Bienvenido {{ user.username }}</span>
       {% endif %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Agregar el siguiente código para el icono de búsqueda -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch"
+        aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
+        <i class="bi bi-search"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        {% if user.rol == 'Administrador' %}
+        <form class="d-flex position-relative ms-auto me-auto">
+        <button type="button" class="btn btn-outline-primary"><a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
+        </form>
+  
+        <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
+        {% else %}
+        <div class="navbar-nav ms-auto">
+          <a class="navbar-text text-white" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
+        </div>
+        {% endif %}
+      </div>
+  
+      <!-- Agregar el siguiente código para la barra de búsqueda -->
+      <div class="collapse navbar-collapse" id="navbarSearch">
+        <form class="d-flex ms-auto">
+          <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        </form>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+  
 </header>
 <div class="pageholder">
   <div class="linkholder">

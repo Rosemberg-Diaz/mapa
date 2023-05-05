@@ -1,15 +1,29 @@
 
-<div style="display: flex; justify-content: center; padding: 5%;">
-    {% if user.rol == 'Administrador' %}
-  <div class="row">
-  <a class="btn btn-outline-primary" href="{% url 'crearEmp' emp %}" style="text-decoration: none; font-size: 20px; color: primary;">
-    <i class="bi bi-person-plus-fill"> Agregar Empleado</i>
-  </a>
+  <div style="display: flex; flex-direction: column; align-items: center; padding: 5%;">
+
+    
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      {% if user.rol == 'Administrador' %}
+      
+        <a class="btn btn-outline-primary" href="{% url 'crearEmp' emp %}" style="text-decoration: none; font-size: 20px; color: primary; margin-bottom: 30px;">
+          <i class="bi bi-person-plus-fill"> Agregar Empleado</i>
+        </a>
+        <h4 style="margin: 0; color: gray; margin-bottom: 30px;">Listado de empleados</h4>
+        <form action="#" method="GET" style="display: flex; align-items: center; width: 300px; margin-bottom: 30px; border-radius: 50px; background-color: #fff; box-shadow: 0 4px 6px rgba(0,0,0,.1);">
+          <input type="text" name="q" placeholder="Buscar empleado" style="padding: 12px; border: none; background: transparent; box-shadow: none; outline: none; width: 80%;">
+          <button type="submit" style="background: transparent; border: none; margin-left: 20px;">
+            <i class="fas fa-search" style="font-size: 1.2em; color: #333;"></i>
+          </button>
+        </form>
+   
+      {% else %}
+        <h4 style="margin: 0; color: gray; margin-bottom: 30px;">Listado de empleados</h4>
+      {% endif %}
+    </div>
   </div>
-    {% else %}
-    <h4 style="margin: 0;  color: gray;">Listado de empleados</h4>
-    {% endif %}
-</div>
+  
+
+
 
 {% for emple in empleados %}
 <div style="display: flex; align-items: center; margin-bottom: 10px;">
@@ -19,6 +33,7 @@
         <p style="margin: 0; color: gray;">{{emple.cargo}}</p>
         <div style=" font-size: 20px; color: #555; cursor: pointer;">
          {% if user.rol == 'Administrador' %}
+         
         <i class="bi bi-pencil"><a href="{% url 'editarEmp' emp emple.documento %}" style="text-decoration: none; color: primary;">Editar</a></i><br>
         <i class="bi bi-eye"><a href='#' onclick="openSidebar('/verEmp/{{emp}}/{{emple.documento}}')" style="text-decoration: none; color: primary;">Ver informacion</a></i><br>
         <i class="bi bi-eye"><a href="{% url 'estadoEmp' emp emple.documento%}" style="text-decoration: none; color: secondary;">Cambiar estado</a></i>
