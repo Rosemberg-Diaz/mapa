@@ -16,8 +16,8 @@
 
   function initMap(data) {
     const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 12,
-      center: { lat: 3.43722, lng: -76.5225 },
+      zoom: {{zoom}},
+      center: { lat: {{lati}}, lng: {{longi}} },
     });
     const infoWindow = new google.maps.InfoWindow();
     const markers = data?.map((i) => {
@@ -118,9 +118,10 @@
   
       <!-- Agregar el siguiente código para la barra de búsqueda -->
       <div class="collapse navbar-collapse" id="navbarSearch">
-        <form class="d-flex ms-auto">
-          <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
-          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        <form class="d-flex ms-auto" method="POST">
+          {% csrf_token %}
+          <input class="form-control me-2" type="text" id="search" name="search" placeholder="Buscar" aria-label="Search">
+          <button class="btn btn-outline-light">Buscar</button>
         </form>
       </div>
     </div>
