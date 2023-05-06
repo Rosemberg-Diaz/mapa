@@ -132,29 +132,29 @@ def crearEmpresa(request):
 '''se utiliza para crear una nueva sede de una empresa. Al igual que en la función anterior,
  se obtienen todas las ciudades disponibles de la base de datos y todas las empresas existentes.
  Si la solicitud del usuario es un método POST, se valida la información ingresada por el usuario utilizando un formulario. '''
-
-@user_login_required
-def crearSede(request):
-    ciudades = Ciudades.objects.all()
-    empresas = Empresas.objects.all()
-    if request.method == 'POST':
-        details = sedeForm(request.POST)
-        if details.is_valid():
-            nombre = request.POST['nombre']
-            post = details.save(commit=False)
-            post.save()
-            p = Sedes.objects.get(nombre=nombre)
-            ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
-            empresa = Empresas.objects.get(nombre=request.POST['empresa'])
-            p.ciudad = ciudad
-            p.empresa = empresa
-            p.save()
-            return redirect('geocode_club', request.POST['nombre'])
-        else:
-            return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
-    else:
-        form = sedeForm(None)
-        return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
+#
+# @user_login_required
+# def crearSede(request):
+#     ciudades = Ciudades.objects.all()
+#     empresas = Empresas.objects.all()
+#     if request.method == 'POST':
+#         details = sedeForm(request.POST)
+#         if details.is_valid():
+#             nombre = request.POST['nombre']
+#             post = details.save(commit=False)
+#             post.save()
+#             p = Sedes.objects.get(nombre=nombre)
+#             ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
+#             empresa = Empresas.objects.get(nombre=request.POST['empresa'])
+#             p.ciudad = ciudad
+#             p.empresa = empresa
+#             p.save()
+#             return redirect('geocode_club', request.POST['nombre'])
+#         else:
+#             return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
+#     else:
+#         form = sedeForm(None)
+#         return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
 
 
 
@@ -244,10 +244,39 @@ def mapa(request):
     user = get_user(request)
     print(user.pk)
     key = settings.GOOGLE_API_KEY
-    context = {
-        'key': key,
-        'user': user
-    }
+    empres =  Empresas.objects.all()
+    nombres= []
+    for i in empres:
+        print(empres)
+        nombres.append(i.nombre)
+    print(nombres)
+    if request.method == 'POST':
+        if request.POST['search'] in nombres:
+            emp = Empresas.objects.get(nombre=request.POST['search'])
+            context = {
+                'key': key,
+                'user': user,
+                'lati': emp.latitude,
+                'longi': emp.longitude,
+                'Empresa': emp,
+                'zoom': 15
+            }
+        else:
+            context = {
+                'key': key,
+                'user': user,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'zoom': 12
+            }
+    else:
+        context = {
+            'key': key,
+            'user': user,
+            'lati': 3.43722,
+            'longi': -76.5225,
+            'zoom': 12
+        }
     return render(request, 'google/map.html', context)
 
 
@@ -283,11 +312,35 @@ def vistaListaEmpl(request, rest):
     emp = Empresas.objects.get(nombre=rest)
     empleados = Empleados.objects.filter(empresa=emp)
     user = get_user(request)
-    context = {
-        'emp': rest,
-        'empleados': empleados,
-        'user':user,
-    }
+    nombres = []
+    completo = []
+    busqueda = []
+    for i in empleados:
+        nombre = i.nombres+ " "+ i.apellidos
+        nombres.append(nombre)
+        completo.append(i)
+    if request.method == 'POST':
+        for idx in range(len(nombres)):
+            if request.POST['search'] in nombres[idx]:
+                busqueda.apennd(completo[idx])
+    else:
+        context = {
+            'emp': rest,
+            'empleados': empleados,
+            'user': user,
+        }
+    if len(busqueda)==0:
+        context = {
+            'emp': rest,
+            'empleados': empleados,
+            'user': user,
+        }
+    else:
+        context = {
+            'emp': rest,
+            'empleados': busqueda,
+            'user': user,
+        }
     return render(request, "google/listaEmp.html", context=context)
 
 
