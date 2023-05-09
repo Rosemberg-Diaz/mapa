@@ -34,10 +34,10 @@
          {% if user.rol == 'Administrador' %}
          
         <i class="bi bi-pencil"><a href="{% url 'editarEmp' emp emple.documento %}" style="text-decoration: none; color: primary;">Editar</a></i><br>
-        <i class="bi bi-eye"><a href='#' onclick="openSidebar('/verEmp/{{emp}}/{{emple.documento}}')" style="text-decoration: none; color: primary;">Ver informacion</a></i><br>
+        <i class="bi bi-eye"><a href='#' onclick="openSidebar('/verEmp/{{emp}}/{{emple.documento}}')" style="text-decoration: none; color: primary;">Ver información</a></i><br>
         <i class="bi bi-eye"><a href="{% url 'estadoEmp' emp emple.documento%}" style="text-decoration: none; color: secondary;">Cambiar estado</a></i>
         {% else %}
-        <i class="bi bi-eye"><a href='#' onclick="openSidebar('/verEmp/{{emp}}/{{emple.documento}}')" style="text-decoration: none; color: primary;">Ver informacion</a></i><br>
+        <i class="bi bi-eye"><a href='#' onclick="openSidebar('/verEmp/{{emp}}/{{emple.documento}}')" style="text-decoration: none; color: primary;">Ver información</a></i><br>
 
         {% endif %}
         </div>
