@@ -62,8 +62,3 @@ var closeButton = document.getElementById("sidebar-close");
 if (closeButton) {
   closeButton.addEventListener("click", closeSidebar);
 }
-
-function mostrar(){
-
-    swal("REGISTRO NO EXITOSO", "DEBE LLENAR TODOS LOS CAMPOS","error");
-}

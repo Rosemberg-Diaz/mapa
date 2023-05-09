@@ -21,7 +21,7 @@
 	<header>
 		<i class="gg-attribution"></i>
 		<nav>
-			<button class="btn-login"><a href="{% url 'login' %} "> Iniciar Sesión</a></button>
+			<button class="btn-login"><a href="{% url 'login' %} "> Iniciar Sesion</a></button>
 			<button class="btn-register"><a href="{% url 'registro' %}"> Registro </a></button>
 		</nav>
 	</header>
@@ -68,31 +68,5 @@
 
 		</section>
 	</main>
-
-	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        {% if messages %}
-          {% for message in messages %}
-            {% if message.tags == 'success' %}
-              <script>
-                Swal.fire({
-                  title: 'Felicitaciones',
-                  text: "{{ message }}",
-                  icon: 'success'
-                });
-              </script>
-            {% elif message.tags == 'error' %}
-              <script>
-                Swal.fire({
-                  title: 'Error',
-                  text: "{{ message }}",
-                  icon: 'error'
-                });
-              </script>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-
-
 </body>
 </html>

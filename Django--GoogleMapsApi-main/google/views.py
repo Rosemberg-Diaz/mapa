@@ -8,7 +8,6 @@ from .models import *
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.core import serializers
-from django.contrip import messages
 import requests
 import json
 import urllib
@@ -28,10 +27,8 @@ def registro(request):
         contraseña = request.POST['clave']
         email = request.POST['email']
         Usuarios.objects.create_user(email, username, contraseña)
-        messages.sucess(request, "EXITOSAMENTE CREADO")
         return redirect('inicio')
     else:
-        messages.error(request, "ERROR EN LA CREACIÓN")
         return render(request, 'Autenticacion/registro.html')
 
 ''' Esta vista maneja la solicitud de inicio de sesión de un usuario existente. Si la petición es una solicitud POST, 
@@ -45,13 +42,11 @@ def login(request):
             request, email=email, contraseña=contraseña)
         if user is not None:
             request.session['user_id'] = str(user.pk)
-            messages.sucess(request, "INGRESANDO EXITOSAMENTE")
             return redirect('map')
         else:
             error_message = 'Nombre de usuario o contraseña incorrectos'
     else:
         error_message = None
-        messages.error(request, "ERROR EN EL INGRESO")
     return render(request, 'Autenticacion/login.html', {'error_message': error_message})
 
 
@@ -125,14 +120,11 @@ def crearEmpresa(request):
             p.ciudad = ciudad
             p.fechaFundacion = request.POST['fechaFundacion']
             p.save()
-            messages.sucess(request, "EMPRESA EXITOSAMENTE CREADA")
             return redirect('geocode_club', request.POST['NIT'])
         else:
-            messages.error(request, "ERROR EN LA CREACIÓN")
             return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
     else:
         form = empresaForm(None)
-        messages.error(request, "ERROR EN LA CREACIÓN")
         return render(request, 'Empresas/create.html', {'form': form, 'ciudades': ciudades})
 
 
@@ -157,14 +149,11 @@ def crearEmpresa(request):
 #             p.ciudad = ciudad
 #             p.empresa = empresa
 #             p.save()
-#             messages.sucess(request, "EXITOSAMENTE CREADO")
 #             return redirect('geocode_club', request.POST['nombre'])
 #         else:
-#             messages.error(request, "ERROR EN LA CREACIÓN")
 #             return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
 #     else:
 #         form = sedeForm(None)
-#         messages.error(request, "ERROR EN LA CREACIÓN")
 #         return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
 
 
@@ -193,14 +182,11 @@ def editarEmpresa(request, NIT):
             post.ciudad = ciudad
             post.fechaFundacion = fechaFundacion
             post.save()
-            messages.sucess(request, "EXITOSAMENTE ACTUALIZADO")
             return redirect('geocode_club', empresa.NIT)
         else:
-            messages.error(request, "ERROR EN LA ACTUALIZACIÓN DE DATOS")
             return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
     else:
         form = empresaForm(instance=empresa)
-        messages.error(request, "ERROR EN LA ACTUALIZACIÓN DE DATOS")
         return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
 
 
@@ -214,7 +200,6 @@ def inactivarEmpresa(request, NIT):
     empresa = get_object_or_404(Empresas, NIT=NIT)
     empresa.estado = False
     empresa.save()
-    messages.sucess(request, "LA EMPRESA SE INACTIVO CORRECTAMENTE")
     return redirect('geocode_club', empresa.NIT)
 
 
@@ -395,14 +380,12 @@ def vistaCrearEmpl(request, rest):
             p.save()
             # redirect it to some another page indicating data
             # was inserted successfully
-            messages.sucess(request, "EXITOSAMENTE CREADO")
             return redirect('map')
 
         else:
 
             # Redirect back to the same page if the data
             # was invalid
-            messages.error(request, "ERROR EN LA CREACIÓN")
             return render(request, "Empleados/crearEmp.html", {'form': details})
     else:
 
@@ -410,7 +393,6 @@ def vistaCrearEmpl(request, rest):
         # create an empty form object and
         # render it into the page
         form = empleadoForm(None)
-        messages.error(request, "ERROR EN LA CREACIÓN, EL VALOR ESTÁ VACIO")
         return render(request, 'Empleados/crearEmp.html', {'form': form})
 
 
@@ -449,15 +431,12 @@ def vistaEditarEmpl(request, rest, ced):
             print("Entro")
             print(p)
             p.save()
-            messages.sucess(request, "EXITOSAMENTE ACTUALIZADO")
             return redirect('map')
         else:
             form = empleadoForm(instance=p)
-            messages.error(request, "ERROR EN LA ACTUALIZACIÓN DE DATOS")
             return render(request, 'Empleados/editarEmp.html', {'form': form, 'emp':p})
     else:
         form = empleadoForm(instance=p)
-        messages.error(request, "ERROR EN LA ACTUALIZACIÓN DE DATOS")
         return render(request, "Empleados/editarEmp.html", {'form': form, 'emp':p})
 
 
