@@ -33,8 +33,18 @@
         infoWindow.open(marker.getMap(), marker);
         updateSidebarContent(i); // Actualiza el contenido del sidebar
         showSidebar(); // Despliega el sidebar
+
+        // Guarda la ubicación del marcador en localStorage
+        localStorage.setItem('selectedMarkerLat', marker.getPosition().lat());
+        localStorage.setItem('selectedMarkerLng', marker.getPosition().lng());
       });
     });
+
+    const selectedMarkerLat = localStorage.getItem('selectedMarkerLat');
+    const selectedMarkerLng = localStorage.getItem('selectedMarkerLng');
+    if (selectedMarkerLat && selectedMarkerLng) {
+       map.setCenter({ lat: parseFloat(selectedMarkerLat), lng: parseFloat(selectedMarkerLng) });
+    }
 
     function updateSidebarContent(markerData) {
       document.getElementById('inactivar').addEventListener('click', function(event) {
@@ -187,7 +197,7 @@
           <li id="sidebar-telefono"></li>
           <li id="sidebar-direccion"></li>
           <!--<li id="sidebar-ciudad"></li>-->
-          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
+          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: AÚN NO ESTA DISPONIBLE</li>
         </ul>
       </div>
 
