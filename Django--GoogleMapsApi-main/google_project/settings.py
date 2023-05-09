@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MESSAGE_STRORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 # Application definition
 
@@ -72,7 +73,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'google_project.wsgi.application'
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends'
+]
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
