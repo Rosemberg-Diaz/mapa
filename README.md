@@ -10,3 +10,10 @@ Asi que si voy a agregar una direccion por ejemplo de Cali. Debo escribir la dir
 
 Juan Camilo Clavijo:
 Se integro la parte de empleados y empresas, se corrigieron algunas cosas de front y se habilito la visualizacion por parte de los clientes.
+
+
+INDICACIONES 10/05/2023
+
+Crear al nivel de la carpeta de la aplicacion, una carpeta que se llame "credenciales" e insertar el json correspondiente.
+Adicional instalar la siguiente dependencia:
+    - pip installa django-storages[google]
