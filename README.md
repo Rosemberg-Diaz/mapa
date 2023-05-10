@@ -15,5 +15,6 @@ Se integro la parte de empleados y empresas, se corrigieron algunas cosas de fro
 INDICACIONES 10/05/2023
 
 Crear al nivel de la carpeta de la aplicacion, una carpeta que se llame "credenciales" e insertar el json correspondiente.
+
 Adicional instalar la siguiente dependencia:
     - pip installa django-storages[google]
