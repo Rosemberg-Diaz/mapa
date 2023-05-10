@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from google.oauth2 import service_account
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MESSAGE_STRORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 # Application definition
 
@@ -38,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'google.apps.GoogleConfig',
+    'googleApp.apps.GoogleConfig',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'google_project.wsgi.application'
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends'
+]
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -121,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/google/static/'
+STATIC_URL = '/googleApp/static/'
 
 GOOGLE_API_KEY = 'AIzaSyBt09KmkIlhtH-LeDrO8V6_-Nhv2fleBak'
 BASE_COUNTRY = 'NL'
@@ -130,3 +134,17 @@ BASE_COUNTRY = 'NL'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Accedemos al json llamado credencialesque esta en una carpeta llamada credenciales
+CREDENCIALES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'credenciales'))
+
+CREDENCIALES = CREDENCIALES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'credenciales'))
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(CREDENCIALES_DIR, 'high-task-380101-567919917d93.json')
+)
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_PROJECT_ID = 'high-task-380101'
+GS_BUCKET_NAME = 'bucket_geovallebusiness'
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)

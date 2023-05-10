@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <title>Registro</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+{% block content %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+            crossorigin="anonymous"></script>
+    <div class="wrapper fadeInDown">
+    <div id="formContent">
+    <h2 class="active">Registro de Usuario</h2>
+    <div class="fadeIn first">
+        <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" id="icon" alt="Usuario Icon">
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="div">
+    <label style="display: inline-block; width: 100px;">Nombre de usuario:</label>
+    <input type="text" name="username" style="display: inline-block; width: 150px; height: 20px; background-color: white; border: 1px solid black;" class="fadeIn Name" required><br><br>
+        <label>Email:</label>
+        <input type="email" name="email" class="fadeIn second"  required><br><br>
+        <label>Contraseña:</label>
+        <input type="password" name="clave"class="fadeIn third"  required><br><br>
+        <button type="submit" class="btn btn-outline-primary">Registrarse</button>
+        </div>
+    </form>
+    <div class="formFooter">
+            <br>
+            <br>
+            <a class="uderlineHover" href="{% url 'login' %}">¿Tienes cuenta? Incia sesión</a>
+            <br>
+            <br>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% load static %}
+  <script type="text/javascript" src="{% static 'javascript/sidebar.js' %}"></script>
+</body>
+</html>
