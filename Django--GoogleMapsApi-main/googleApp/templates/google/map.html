@@ -71,22 +71,24 @@
       document.getElementById('personal_link').setAttribute('onclick', 'openSidebar(\'/listaEmp/'+emp+'\')');
 
       $("#sidebar-title").text(markerData.nombre);
-      $("#sidebar-description").text('DESCRIPCIÓN: '+ markerData.descripcion);
-      $("#sidebar-nit").text('NIT: '+markerData.NIT);
-      $("#sidebar-mision").text('MISIÓN: '+markerData.mision);
-      $("#sidebar-vision").text('VISIÓN: '+markerData.vision);
-      $("#sidebar-telefono").text('TELEFONO: '+markerData.telefono);
-      $("#sidebar-direccion").text('DIRECCIÓN: '+markerData.direccion);
-      $("#sidebar-pagina").text(markerData.paginaWeb);
-      $("#sidebar-fecha").text('FECHA DE FUNDACIÓN: '+markerData.fechaFundacion);
-      $("#sidebar-email").text('EMAIL: '+markerData.email);
-      $("#sidebar-ciudad").text('CIUDAD: '+markerData.ciudad);
+      $("#sidebar-description").html('<strong>DESCRIPCIÓN:</strong> ' + markerData.descripcion);
+      $("#sidebar-nit").html('<strong>NIT:</strong> ' + markerData.NIT);
+      $("#sidebar-mision").html('<strong>MISIÓN:</strong> ' + markerData.mision);
+      $("#sidebar-vision").html('<strong>VISIÓN:</strong> ' + markerData.vision);
+      $("#sidebar-telefono").html('<strong>TELEFONO:</strong> ' + markerData.telefono);
+      $("#sidebar-direccion").html('<strong>DIRECCIÓN:</strong> ' + markerData.direccion);
+      $("#sidebar-pagina").html(markerData.paginaWeb);
+      $("#sidebar-fecha").html('<strong>FECHA DE FUNDACIÓN:</strong> ' + markerData.fechaFundacion);
+      $("#sidebar-email").html('<strong>EMAIL:</strong> ' + markerData.email);
+      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
         });
       });
     }
+
     function showSidebar() {
       $("#sidebar").show();
     }
@@ -99,7 +101,7 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Empresas</a>
+      <a class="navbar-brand" href="#">GEOSOFT</a>
   
       {% if user.rol == 'Administrador' %}
       <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
@@ -201,7 +203,7 @@
         </ul>
       </div>
 
-        <h2 class="drawer-subtitulo">Pagina oficial:</h2>
+        <h2 class="drawer-subtitulo">Pagina Oficial:</h2>
         <div class="drawer-pagina">
           <a id="sidebar-pagina" href="#" class="color-web"></a>
         </div>
