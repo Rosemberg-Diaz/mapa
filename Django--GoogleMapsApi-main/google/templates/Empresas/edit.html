@@ -4,17 +4,18 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/estiloEditar.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/fontello.css' %}">
 
-<div style="text-align:center">
+<div class="container col-md-7" style="padding-top: 20px; padding-bottom: 20px;">
     <div style="display:flex; flex-direction:column; align-items:center;">
-        <div class="card" style="width:50%;">
+        <div class="card">
             <div class="card-body">
                 <div class="text-center">
-                    <a class="icon-cancel"  title="Cerrar" id="sidebar-close" href="/"></a>
+                    <a class="icon-cancel"  title="Cerrar" id="sidebar-close" href="{% url 'map' %}"></a>
                     <h2>Editar Empresa</h2>
                 </div>
 
                 <form method="POST">
                     {% csrf_token %}
+
                     {{ form.as_p }}
                     <div class="form-group">
                         <label>Ubicación de la empresa</label>

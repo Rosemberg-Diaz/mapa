@@ -1,0 +1,179 @@
+/* color #FFC727 fuente poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;500&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Aqui creamos las variables */
+:root {
+    --color-principal: #4aecfe;
+    --color-container: #DFEAFF;
+
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 3vh 5vw;
+    align-items: center;
+}
+
+nav {
+    display: flex;
+    gap: 44px;
+}
+
+.gg-attribution {
+    color: var(--color-principal);
+    font-size: 40px;
+    -webkit-text-stroke: 1px black;
+}
+
+.btn-register {
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size: 22px;
+    border: none;
+    background-color: var(--color-principal);
+    /* aqui usamos la variable */
+}
+
+.btn-register:hover {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-login {
+    text-decoration: none;
+    padding: 12px 30px;
+    background-color: transparent;
+    border: 1px gray solid;
+    border-radius: 14px;
+    font-size: 22px;
+    filter: drop-shadow(4px -4px 24px rgba(94, 71, 71, 0.25));
+}
+
+.btn-login:hover {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.hero {
+    padding: 3vh 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    /* o space-around */
+}
+
+.hero .hero-title {
+    width: 30vw;
+    /* respeta los espacios */
+}
+
+.hero-title h1 {
+
+    font-size: 40px;
+    margin-bottom: 20px;
+
+}
+
+.hero-title .parrafo-hero {
+    font-weight: lighter;
+    font-size: 20px;
+}
+
+.font-color-amarillo
+
+/* Aqui cambiamos el color de documentos con etiqueta span en html */
+    {
+    color: var(--color-principal);
+}
+
+.img-container {
+    width: 30vw;
+    margin-right: 5vw;
+}
+
+.img-container img {
+    width: 100%;
+}
+
+
+/* estilos de las cards */
+
+.services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 5vh 5vw;
+    background-color: var(--color-container);
+    /* border-top-right-radius: 100px;
+    border-top-left-radius: 100px; */
+}
+
+.service-title {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    text-align: center;
+
+}
+
+.card-service {
+    /* border: 1px solid black; */
+    width: 300px;
+    /* 30% se hace mas cuadradas */
+    padding: 20px;
+    background-color: white;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: 0.4s ease-out;
+
+}
+
+/* arreglar el hover */
+
+.card-service:hover {
+
+    transform: translateY(20px);
+
+}
+
+.card-service img {
+    width: 180px;
+    height: 155px;
+    display: block;
+    margin: auto;
+
+}
+
+.card-service h2 {
+    margin: 10px;
+    text-align: center;
+}
+
+.card-service p {
+    margin: 10px;
+    text-align: center;
+}
+
+.ubicacion h2 {
+    padding-top: 80px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+iframe {
+    display: block;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+/* terminar de hacer las cards e iconos de redes ver error */

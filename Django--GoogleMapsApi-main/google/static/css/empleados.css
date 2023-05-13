@@ -1,27 +1,27 @@
-@import url('https://fonts.googleapis.com/css?family=Inter&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Inter&display=swap");
 
 .form-group {
-      margin-bottom: 100%;
-    }
+  margin-bottom: 20px;
+}
 
-    label {
-      font-weight: bold;
-    }
+label {
+  font-weight: bold;
+}
 
-    button.btn {
-      margin-right: 10px;
-    }
+button.btn {
+  margin-right: 10px;
+}
 
-    button.btn-rounded {
-      border-radius: 30px;
-    }
+button.btn-rounded {
+  border-radius: 30px;
+}
 
-    /* Estilos para los campos */
+/* Estilos para los campos */
 .form-control {
   background-color: #eeeded;
   border: 2px solid #000000;
   border-radius: 30px;
-  color: #7D6F6F;
+  color: #7d6f6f;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   font-family: Inter, sans-serif;
   text-align: center;
@@ -31,12 +31,11 @@
   box-shadow: none;
 }
 
-
 .form-control2 {
   background-color: #eeeded;
   border: 2px solid #000000;
   border-radius: 30px;
-  color: #7D6F6F;
+  color: #7d6f6f;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   font-family: Inter, sans-serif;
   text-align: center;
@@ -46,27 +45,27 @@
   box-shadow: none;
 }
 
-.form-control2, select.form-control2 {
+.form-control2,
+select.form-control2 {
   height: 40px;
   width: 100%;
   border: 1px solid black;
   border-radius: 30px;
   background-color: #eeeded;
-  color: #7D6F6F;
+  color: #7d6f6f;
   padding-right: 35px;
 }
 
-
-.form-control, select.form-control {
+.form-control,
+select.form-control {
   height: 40px;
   width: 95%;
   border: 1px solid black;
   border-radius: 30px;
   background-color: #eeeded;
-  color: #7D6F6F;
+  color: #7d6f6f;
   padding-right: 35px;
 }
-
 
 select.form-control {
   -webkit-appearance: none;
@@ -80,31 +79,33 @@ select.form-control {
 }
 
 texto-gris {
-  color: #4D555C;
+  color: #4d555c;
   font-family: Inter, sans-serif;
 }
 
 .texto-azul {
-  color: #0074D9;
+  color: #0074d9;
   font-family: Inter, sans-serif;
 }
 
 .font {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
-  }
-
-
-.card {
-    border-radius: 1px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
-    /*opacity: 0.6;*/
-    overflow: hidden;
-    margin: 0 auto;
-    width: 90%;
 }
 
-.card-body {
-    padding: 2%;
-    text-align: left;
+.card {
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+  /*opacity: 0.6;*/
+  overflow: hidden;
+  margin: 0 auto;
+  width: 90%;
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 }

@@ -10,6 +10,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 
+
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-2jUg/vWWwLyOA6VTxmaETfzYJBY+nLgz4O9ysH4T22+iZTStVcTkJrMz8x7FvmAa2HzVrgajbNSsXsVfEymtww==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -26,16 +27,39 @@
 
     <script type="text/javascript" src="//kit.fontawesome.com/b68b3cc9f2.js?ver=5.2.4"></script>
     <script src="https://kit.fontawesome.com/f44bd2967c.js" crossorigin="anonymous"></script>
-
     
     <title> Django - Google Maps API</title>
 
 </head>
-<body> 
-    
- 
+<body>
+
     {% block content %}
     {% endblock %}
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'success' %}
+              <script>
+                Swal.fire({
+                  title: 'Felicitaciones',
+                  text: "{{ message }}",
+                  icon: 'success'
+                });
+              </script>
+            {% elif message.tags == 'error' %}
+              <script>
+                Swal.fire({
+                  title: 'Error',
+                  text: "{{ message }}",
+                  icon: 'error'
+                });
+              </script>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+
  
 </body>
 </html>

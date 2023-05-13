@@ -8,33 +8,37 @@
     <div class="card" style="width:90%;">
         <div class="card-body">
             <div class="text-center">
-                <a class="icon-cancel" title="Cerrar" id="sidebar-close" href="/"></a>
+                <a class="icon-cancel" title="Cerrar" id="sidebar-close" href="{% url 'map' %}"></a>
                 <h2>Crear Empresa</h2>
-                <h5>TODOS LOS CAMPOS SON REQUERIDOS</h5>
             </div>
             <form method="POST" class="form_2_cols">
                 {% csrf_token %}
-                <div style="display:flex; justify-content:space-between;">
-                    <div style="width: 50%;">
+                <div style="display:flex; justify-content:space-between;" class="row">
+
+                        <div class="col-md-6">
                         {{ form.as_p }}
-                    </div>
-                    <div style="width: 45%;">
-                        <div class="form-group">
-                            <label>Ubicación de la empresa</label>
-                            <select name="ciudad" id="ciudad" class="form-control">
-                                {% for ciudad in ciudades %}
-                                <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
-                                {% endfor %}
-                            </select>
                         </div>
-    
-                        <div class="form-group">
-                            <label>Fecha de Fundación</label>
-                            <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion"
-                                   max="{% now 'Y-m-d' %}" required>
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label>Ubicación de la empresa*</label>
+                                <select name="ciudad" id="ciudad" class="form-control">
+                                    {% for ciudad in ciudades %}
+                                    <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Fecha de Fundación*</label>
+                                <input type="date" class="form-control" id="fechaFundacion" name="fechaFundacion"
+                                       max="{% now 'Y-m-d' %}" required>
+                            </div>
                         </div>
                     </div>
-                </div>
+
                 <button class="btn btn-default">
                     Enviar
                 </button>

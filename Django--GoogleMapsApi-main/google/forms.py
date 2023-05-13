@@ -4,6 +4,8 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from .models import *
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
 
 mode_of_transport = [
   ("Driving","driving"),
@@ -75,24 +77,40 @@ class empresaForm(forms.ModelForm):
       )
     }
 
-class sedeForm(forms.ModelForm):
+#class sedeForm(forms.ModelForm):
+    #  class Meta:
+    #model = Sedes
+    #fields = ('nombre', 'telefono', 'direccion')
+    #widgets = {
+    #  'nombre': forms.TextInput(
+    #    attrs={
+    #      'class': 'form-control'
+    #    }
+    #  ),
+    #  'telefono': forms.NumberInput(
+    #    attrs={
+    #      'class': 'form-control'
+    #    }
+    #  ),
+    #  'direccion': forms.TextInput(
+    #    attrs={
+    #      'class': 'form-control'
+    #    }
+    #  ),
+    #}
+
+class empleadoForm(forms.ModelForm):
   class Meta:
-    model = Sedes
-    fields = ('nombre', 'telefono', 'direccion')
+    model = Empleados
+    fields = ('nombres', 'apellidos', 'telefono', 'email',
+              'documento', 'cargo', 'experiencia', 'experienciaCargo')
     widgets = {
-      'nombre': forms.TextInput(
-        attrs={
-          'class': 'form-control'
-        }
-      ),
-      'telefono': forms.NumberInput(
-        attrs={
-          'class': 'form-control'
-        }
-      ),
-      'direccion': forms.TextInput(
-        attrs={
-          'class': 'form-control'
-        }
-      ),
+        'nombres': forms.TextInput(attrs={'class': 'form-control'}),
+        'apellidos': forms.TextInput(attrs={'class': 'form-control'}),
+        'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+        'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        'documento': forms.TextInput(attrs={'class': 'form-control'}),
+        'cargo': forms.TextInput(attrs={'class': 'form-control'}),
+        'experiencia': forms.TextInput(attrs={'class': 'form-control'}),
+        'experienciaCargo': forms.TextInput(attrs={'class': 'form-control'}),
     }
