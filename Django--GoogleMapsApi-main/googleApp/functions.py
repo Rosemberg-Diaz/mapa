@@ -1,5 +1,14 @@
 import base64
 
+"""
+   Codifica una imagen en base64.
+
+   :param nombre: El nombre del archivo de la imagen a codificar.
+   :type nombre: str
+   :return: La imagen codificada en base64.
+   :rtype: str
+"""
+
 def encode_img(nombre):
     image = open(nombre, 'rb')
     image_read = image.read()
