@@ -245,29 +245,34 @@ def mapa(request):
     print(user.pk)
     key = settings.GOOGLE_API_KEY
     empres =  Empresas.objects.all()
+    empresBusqueda= []
     nombres= []
     for i in empres:
         print(empres)
         nombres.append(i.nombre)
     print(nombres)
     if request.method == 'POST':
-        if request.POST['search'] in nombres:
-            emp = Empresas.objects.get(nombre=request.POST['search'])
+        for nombre in nombres:
+            if request.POST['search'] in nombre:
+                emp = Empresas.objects.get(nombre=nombre)
+                empresBusqueda.append(emp)
+        if(len(empresBusqueda)==0):
             context = {
                 'key': key,
                 'user': user,
-                'lati': emp.latitude,
-                'longi': emp.longitude,
-                'Empresa': emp,
-                'zoom': 15
+                'Empresa': empres,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'zoom': 12
             }
         else:
             context = {
                 'key': key,
                 'user': user,
-                'lati': 3.43722,
-                'longi': -76.5225,
-                'zoom': 12
+                'lati': emp.latitude,
+                'longi': emp.longitude,
+                'Empresa': empresBusqueda,
+                'zoom': 15
             }
     else:
         context = {
@@ -322,7 +327,7 @@ def vistaListaEmpl(request, rest):
     if request.method == 'POST':
         for idx in range(len(nombres)):
             if request.POST['search'] in nombres[idx]:
-                busqueda.apennd(completo[idx])
+                busqueda.apennd(empleados[idx])
     else:
         context = {
             'emp': rest,
