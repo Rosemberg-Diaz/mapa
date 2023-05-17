@@ -81,51 +81,73 @@
       $("#sidebar").show();
     }
   }
-
+  function expandSearch() {
+    var searchInput = document.getElementById("search");
+    searchInput.classList.toggle("expanded");
+  }
 </script>
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Empresas</a>
+  
       {% if user.rol == 'Administrador' %}
       <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
       {% else %}
       <span class="navbar-text text-white d-flex align-items-center">Bienvenido {{ user.username }}</span>
       {% endif %}
+  
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
         aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
   
-      <!-- Agregar el siguiente código para el icono de búsqueda -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch"
-        aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
-        <i class="bi bi-search"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        {% if user.rol == 'Administrador' %}
-        <form class="d-flex position-relative ms-auto me-auto">
-        <button type="button" class="btn btn-outline-primary"><a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">Crear Empresa</a></button>
-        </form>
+      <!-- Botón para la barra de búsqueda -->
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+       
   
-        <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
+        <form class="d-flex ms-auto ms-3" method="POST">
+          {% csrf_token %}
+          <input class="form-control me-2 flex-grow-1" type="text" id="search" name="search" placeholder="Buscar" aria-label="Search"  style="padding: 12px; border: none; background: white; box-shadow: none; outline: none; ">
+        </form>
+       
+      </div>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+        <button class="btn btn-outline-light me-2 " style="background: transparent; border: none; margin-left: auto;" onClick="expandSearch()">
+          <i class="fas fa-search" style="font-size: 1.2em; color: #ffffff;"></i>
+        </button>
+      </div>
+
+        {% if user.rol == 'Administrador' %}
+        <form class="d-flex position-relative ms-auto me-3">
+         
+          <button type="button" class="btn btn-outline-primary me-2">
+            <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">
+              Crear Empresa
+            </a>
+          </button>
+          <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">
+            Salir
+            <i class="bi bi-arrow-bar-left ms-1"></i>
+          </a>
+        </form>
         {% else %}
+        
         <div class="navbar-nav ms-auto">
-          <a class="navbar-text text-white" href="{% url 'logout' %}">Salir<i class="bi bi-arrow-bar-left ms-1"></i></a>
+          <a class="navbar-text text-white" href="{% url 'logout' %}">
+            Salir
+            <i class="bi bi-arrow-bar-left ms-1"></i>
+          </a>
         </div>
         {% endif %}
       </div>
   
-      <!-- Agregar el siguiente código para la barra de búsqueda -->
-      <div class="collapse navbar-collapse" id="navbarSearch">
-        <form class="d-flex ms-auto" method="POST">
-          {% csrf_token %}
-          <input class="form-control me-2" type="text" id="search" name="search" placeholder="Buscar" aria-label="Search">
-          <button class="btn btn-outline-light">Buscar</button>
-        </form>
-      </div>
+      <!-- Barra de búsqueda -->
+  
     </div>
   </nav>
+
   
 </header>
 <div class="pageholder">
@@ -195,4 +217,38 @@
   </div>
 </div>
 <script type="text/javascript" src="{% static 'javascript/sidebar.js' %}"></script>
+<style>
+  @media (max-width: 768px) {
+    #search {
+      visibility: hidden;
+  overflow: hidden;
+      width: 0;
+      transition: width 0.3s ease-in-out;
+    }
+    #search.expanded {
+      margin-left: 10%;
+      margin-top: 14%;
+      visibility: visible;
+      width: 200px;
+      border-radius: 50px; 
+      background-color: #fff; 
+      box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    }
+  }
+    #search {
+      visibility: hidden;
+  overflow: hidden;
+      width: 0;
+      transition: width 0.3s ease-in-out;
+    }
+  
+    #search.expanded {
+      visibility: visible;
+      width: 300px;
+      border-radius: 50px; 
+      background-color: #fff; 
+      box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    }
+  </style>
+  
 {% endblock content %}
