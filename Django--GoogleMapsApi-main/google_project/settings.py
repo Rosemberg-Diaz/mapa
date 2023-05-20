@@ -148,14 +148,6 @@ CLOUDINARY_STORAGE= {
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 
-# Accedemos al json llamado credencialesque esta en una carpeta llamada credenciales
-CREDENCIALES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'credenciales'))
-
-CREDENCIALES = CREDENCIALES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'credenciales'))
-
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(CREDENCIALES_DIR, 'high-task-380101-567919917d93.json')
-)
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_PROJECT_ID = 'high-task-380101'
