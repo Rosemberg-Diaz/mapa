@@ -14,24 +14,10 @@ mode_of_transport = [
   ("Transit","transit"),
 ]
 
-"""
-    Personaliza la representación de un campo de fecha y hora en un formulario de Django
-    utilizando un elemento input de tipo 'datetime-local'.
-"""
 
 class DateTimeInput(forms.DateTimeInput):
   input_type = 'datetime-local'
 
-
-"""
-    Formulario para el modelo Empresas.
-
-    Define los campos que se incluirán en el formulario y los widgets
-    que se utilizarán para renderizarlos. El objetivo principal de
-    esta clase es proporcionar una forma fácil de crear y manipular
-    formularios HTML para la creación o actualización de instancias
-    de modelo.
-"""
 
 class empresaForm(forms.ModelForm):
   class Meta:
@@ -112,25 +98,6 @@ class empresaForm(forms.ModelForm):
     #    }
     #  ),
     #}
-
-"""
-  Define un formulario para la creación de instancias de la clase Empleados.
-  
-  Atributos:
-  
-  nombres (CharField): campo para el ingreso del nombre del empleado.
-  apellidos (CharField): campo para el ingreso del apellido del empleado.
-  telefono (CharField): campo para el ingreso del número de teléfono del empleado.
-  email (EmailField): campo para el ingreso del correo electrónico del empleado.
-  documento (CharField): campo para el ingreso del número de documento del empleado.
-  cargo (CharField): campo para el ingreso del cargo del empleado.
-  experiencia (CharField): campo para el ingreso de la experiencia del empleado.
-  experienciaCargo (CharField): campo para el ingreso de la experiencia del empleado en el cargo actual.
-  Widgets:
-  
-  TextInput: widget para el ingreso de texto.
-  EmailInput: widget para el ingreso de correos electrónicos.
-"""
 
 class empleadoForm(forms.ModelForm):
   class Meta:

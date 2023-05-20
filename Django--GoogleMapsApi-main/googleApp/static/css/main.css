@@ -155,9 +155,9 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 90%;
     height: 90%;
-    max-width: 50%; /* añadido: establece una anchura máxima */
+    max-width: 500px; /* añadido: establece una anchura máxima */
     max-height: 70%; /* añadido: establece una altura máxima */
     background-color: white;
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
@@ -165,7 +165,7 @@
     display: none;
     z-index: 1; /* nivel superior al mapa */
     overflow: auto;
-    /*margin: auto; /* añadido: centrar horizontal y verticalmente */
+    margin: auto; /* añadido: centrar horizontal y verticalmente */
     top: 0;
     right: 0;
     bottom: 0;

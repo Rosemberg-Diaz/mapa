@@ -21,4 +21,5 @@ urlpatterns = [
    path('editarEmp/<str:rest>/<str:ced>/', view.vistaEditarEmpl, name='editarEmp'),
    path('verEmp/<str:rest>/<str:ced>/', view.vistaVerEmpl, name='verEmp'),
    path('estadoEmp/<str:rest>/<str:ced>/', view.estadoEmp, name='estadoEmp'),
+   path('mydataBusqueda',view.mydataBusqueda, name="mydataBusqueda"),
 ]

@@ -34,6 +34,7 @@ MESSAGE_STRORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'googleApp.apps.GoogleConfig',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,17 @@ BASE_COUNTRY = 'NL'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#CLOUDINARY
+CLOUDINARY_STORAGE= {
+    'CLOUD_NAME':'do62ntqmt',
+    'API_KEY':'483961711925767',
+    'API_SECRET':'oFg5nUvo8UIi33tK5QioMSn7VNQ',
+}
+
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+
 
 # Accedemos al json llamado credencialesque esta en una carpeta llamada credenciales
 CREDENCIALES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'credenciales'))

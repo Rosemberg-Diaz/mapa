@@ -1,3 +1,5 @@
+{% extends 'google/base.html' %}
+{% block content %}
 {% load static %}
 
   <link rel="stylesheet" type="text/css" href="{% static 'css/estiloEditar.css' %}">
@@ -103,7 +105,7 @@ $(document).ready(function() {
                   <span class="visually-hidden">Loading...</span>
                 </div>
                 <div class="mt-4">
-                  <span><h3>Procesando los datos...</h3></span>
+                  <span><h3 >Procesando los datos...</h3></span>
                 </div>
               </div>
             </div>
@@ -119,3 +121,4 @@ function ocultarTexto() {
 
 
 </html>
+{% endblock %}

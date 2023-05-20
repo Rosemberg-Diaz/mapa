@@ -27,27 +27,17 @@ import os
 from urllib.parse import urlparse
 import mimetypes
 
+#cloudinary
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from cloudinary import uploader
+from cloudinary import CloudinaryResource
+import cloudinary.utils
 
-"""
-Vista de registro de usuario en la pagina web.
+mydataJ = []
 
-Métodos:
 
-registro(request)
-    Esta función maneja las solicitudes GET y POST de la vista de registro de usuario.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponseRedirect
-    Redirige al usuario a la página de inicio si la creación de usuario es exitosa.
-    Si hay un error en la creación del usuario, se renderiza la plantilla registro.html con un mensaje de error.
-"""
-
+''' Esta vista maneja la solicitud de registro de un nuevo usuario. Si la petición es una solicitud POST,
+ se recogen los datos del formulario y se crea un nuevo usuario con la función create_user del modelo Usuarios.'''
 
 def registro(request):
     if request.method == 'POST':
@@ -61,27 +51,8 @@ def registro(request):
         messages.error(request, "ERROR EN LA CREACIÓN")
         return render(request, 'Autenticacion/registro.html')
 
-
-"""
-Vista de inicio de sesión en la pagina web.
-
-Métodos:
-
-login(request)
-    Esta función maneja las solicitudes GET y POST de la vista de inicio de sesión.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponse
-    Si la autenticación es exitosa, redirige al usuario a la página de map.
-    Si hay un error en la autenticación, renderiza la plantilla login.html con un mensaje de error.
-"""
-
+''' Esta vista maneja la solicitud de inicio de sesión de un usuario existente. Si la petición es una solicitud POST, 
+se recogen los datos del formulario y se utiliza la función authenticate del backend personalizado CustomAuthBackend para autenticar al usuario.'''
 
 def login(request):
     if request.method == 'POST':
@@ -102,24 +73,7 @@ def login(request):
 
 
 
-"""
-Obtiene el objeto Usuario correspondiente al usuario actualmente autenticado.
-
-Métodos:
-
-get_user(request)
-    Esta función obtiene el ID del usuario de la sesión actual y devuelve el objeto Usuario correspondiente.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-Usuarios
-    Objeto Usuario correspondiente al usuario actualmente autenticado.
-"""
+'''Esta vista devuelve el objeto de usuario correspondiente a la sesión actual del usuario.'''
 
 def get_user(request):
     user_id = request.session.get('user_id')
@@ -127,48 +81,11 @@ def get_user(request):
     return Usuarios.objects.get(pk=user_id)
 
 
-"""
-Vista base de la pagina web.
-
-Métodos:
-
-vistaBase(request)
-    Esta función renderiza la plantilla base.html.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponse
-    Renderiza la plantilla base.html.
-"""
-
 def vistaBase(request):
     return render(request, "Autenticacion/base.html")
 
 
-"""
-Vista de cierre de sesión en la pagina web.
-
-Métodos:
-
-logout_view(request)
-    Esta función maneja la solicitud GET de la vista de cierre de sesión.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponseRedirect
-    Redirige al usuario a la página de inicio después de cerrar la sesión.
-"""
-
+'''Esta vista maneja la solicitud de cierre de sesión de un usuario'''
 
 @user_login_required
 def logout_view(request):
@@ -178,25 +95,7 @@ def logout_view(request):
 
 
 
-"""
-Vista de página principal de la pagina web.
-
-Métodos:
-
-home(request)
-    Esta función renderiza la plantilla home.html.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponse
-    Renderiza la plantilla home.html.
-"""
-
+'''Esta vista renderiza la página de inicio después de que un usuario haya iniciado sesión.'''
 
 @user_login_required
 def home(request):
@@ -205,24 +104,7 @@ def home(request):
 
 
 
-"""
-Vista de geocodificación de la pagina web.
-
-Métodos:
-
-geocode(request)
-    Esta función renderiza la plantilla geocode.html con la información de todas las empresas.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponse
-    Renderiza la plantilla geocode.html con la información de todas las empresas.
-"""
+'Esta vista renderiza la página de geocodificación de la aplicación y muestra una lista de empresas en la base de datos.'
 
 @user_login_required
 def geocode(request):
@@ -233,27 +115,10 @@ def geocode(request):
     return render(request, 'google/geocode.html', context)
 
 
-"""
-Vista de creación de empresa de la pagina web.
 
-Métodos:
-
-crearEmpresa(request)
-    Esta función maneja las solicitudes GET y POST de la vista de creación de empresa.
-
-Parámetros:
-
-request : HttpRequest
-    Objeto HttpRequest que contiene información sobre la solicitud.
-
-Retorna:
-
-HttpResponseRedirect o HttpResponse
-    - Si la solicitud es POST y los datos del formulario son válidos, la vista crea la empresa y redirige al usuario a la vista geocode_club.
-    - Si la solicitud es POST y los datos del formulario no son válidos, la vista muestra el formulario con los errores.
-    - Si la solicitud es GET, la vista muestra el formulario vacío para crear una nueva empresa.
-"""
-
+'''Este metodo se utiliza para crear una nueva empresa. En primer lugar, se obtienen todas las ciudades disponibles de la base de datos. Luego, 
+si la solicitud del usuario es un método POST, se valida la información ingresada por el usuario utilizando un formulario. 
+Si el formulario es válido, se crea una nueva entrada en la tabla de Empresas de la base de datos y se guarda. '''
 
 @user_login_required
 def crearEmpresa(request):
@@ -320,24 +185,9 @@ def crearEmpresa(request):
 
 
 
-"""
-    Recibe una petición HTTP GET o POST y un NIT (número de identificación tributaria) de una empresa.
-    Si la petición es GET, se obtiene la empresa con el NIT proporcionado, se crea un formulario empresaForm con los datos de la empresa 
-    y se muestra la plantilla 'Empresas/edit.html', que renderiza el formulario y permite modificar los datos de la empresa. 
-    Si la petición es POST, se valida el formulario, se actualiza la empresa con los datos proporcionados en el formulario 
-    y se redirige al usuario a la vista 'geocode_club' con el NIT de la empresa actualizado. 
-    Si el formulario no es válido, se muestra un mensaje de error y se vuelve a renderizar la plantilla con el formulario y los datos de la empresa 
-    para que el usuario pueda corregir los errores.
-
-    Parámetros:
-    
-    - request: objeto HttpRequest con los datos de la solicitud HTTP.
-    - NIT: número de identificación tributaria de la empresa a editar.
-
-    Retorna:
-    
-    - objeto HttpResponse con la plantilla renderizada.
-"""
+''' se utiliza para editar la información de una empresa existente. Se obtiene el objeto Empresa correspondiente a la NIT proporcionada.
+ Si la solicitud del usuario es un método POST, se valida la información ingresada por el usuario utilizando un formulario. Si el formulario es válido, 
+se actualiza la entrada en la tabla de Empresas de la base de datos y se guarda'''
 
 @user_login_required
 def editarEmpresa(request, NIT):
@@ -371,21 +221,9 @@ def editarEmpresa(request, NIT):
 
 
 
-"""
-    Esta función recibe una solicitud y el NIT de una empresa a inactivar.
-    Utilizando el NIT, se obtiene la empresa utilizando la función get_object_or_404.
-    Luego, se establece el estado de la empresa en False y se guarda el registro en la base de datos.
-    Finalmente, se envía un mensaje de éxito y se redirige al usuario a la página geocode_club de la empresa en cuestión.
-
-    Parámetros:
-    
-    - request: la solicitud HTTP recibida.
-    - NIT: el NIT de la empresa a inactivar.
-
-    Retorna:
-    
-    - Una redirección a la página geocode_club de la empresa inactivada.
-"""
+'''Función que se encarga de cambiar el estado de una empresa a inactivo. Recibe una solicitud HTTP (request) y un número de identificación tributaria (NIT) como parámetros.
+ Primero se busca la empresa correspondiente a NIT utilizando la función get_object_or_404 de Django. 
+Luego, se cambia el valor del estado de la empresa a False y se guarda en la base de datos. '''
 
 def inactivarEmpresa(request, NIT):
     empresa = get_object_or_404(Empresas, NIT=NIT)
@@ -395,22 +233,13 @@ def inactivarEmpresa(request, NIT):
     return redirect('geocode_club', empresa.NIT)
 
 
-"""
-    Toma un objeto request y un parámetro pk que es el NIT de una empresa,
-    y utiliza la API de Google Maps para obtener las coordenadas de la ubicación de la empresa
-    y almacenarlas en la base de datos. Si los datos de la ubicación ya están en la base de datos,
-    simplemente redirige al usuario a una página de mapa.
 
-    Parámetros:
-    
-        request: objeto HttpRequest que representa la solicitud HTTP que se está procesando.
-        pk (str): NIT de la empresa.
 
-    Retorna:
-    
-        HttpResponseRedirect o HttpResponse: redirecciona al usuario a una página de mapa si los datos de ubicación
-        de la empresa ya están en la base de datos, o a una página vacía si se obtuvieron las coordenadas exitosamente.
-"""
+''' Función que se encarga de obtener la latitud y longitud de una dirección de una empresa y guardarla en la base de datos. 
+Recibe una solicitud HTTP (request) y un número de identificación tributaria (pk) como parámetros.
+ Primero, se busca la empresa correspondiente a pk utilizando la función get de Django. Luego, se verifica si la dirección de la empresa ya se encuentra en la base de datos.
+   Si es así, se crea una cadena de texto que contiene la dirección, la ciudad y el país donde se encuentra la empresa. Luego,
+ se utiliza la API de Google Maps para obtener la latitud y longitud correspondiente a la dirección y se guarda en la base de datos. '''
 
 def geocode_club(request, pk):
     empresa = Empresas.objects.get(NIT=pk)
@@ -435,40 +264,35 @@ def geocode_club(request, pk):
     return render(request, 'google/empty.html', context)
 
 
-"""
-   Renderiza un template con un mapa de Google Maps y permite buscar una empresa específica para mostrar su ubicación en el mapa.
 
-   Parámetros:
-
-   request -- Solicitud HTTP.
-
-   Retorna:
-
-   Respuesta HTTP con un mapa de Google Maps.
-
-"""
+'''Función que se encarga de renderizar la página map.html con los datos necesarios. 
+Recibe una solicitud HTTP (request) como parámetro. Primero, se obtiene el usuario que ha realizado la solicitud utilizando la función get_user de Django. 
+Luego, se crea un diccionario que contiene la clave key con el valor de la clave de la API de Google Maps y la clave user con el objeto user anteriormente obtenido. '''
 
 @user_login_required
 def mapa(request):
     user = get_user(request)
-    print(user.pk)
     key = settings.GOOGLE_API_KEY
     empres =  Empresas.objects.all()
     nombres= []
     for i in empres:
-        print(empres)
         nombres.append(i.nombre)
-    print(nombres)
     if request.method == 'POST':
-        if request.POST['search'] in nombres:
-            emp = Empresas.objects.get(nombre=request.POST['search'])
+        for nombre in nombres:
+            if request.POST['search'] in nombre:
+                emp = Empresas.objects.get(nombre=nombre)
+                mydataJ.append({'nombre': emp.nombre,
+                         'latitude': emp.latitude,
+                        'longitude': emp.longitude
+                })
+        if(len(mydataJ)==0):
             context = {
                 'key': key,
                 'user': user,
-                'lati': emp.latitude,
-                'longi': emp.longitude,
-                'Empresa': emp,
-                'zoom': 15
+                'data': True,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'zoom': 12
             }
         else:
             context = {
@@ -476,12 +300,14 @@ def mapa(request):
                 'user': user,
                 'lati': 3.43722,
                 'longi': -76.5225,
+                'data': False,
                 'zoom': 12
             }
     else:
         context = {
             'key': key,
             'user': user,
+            'data': True,
             'lati': 3.43722,
             'longi': -76.5225,
             'zoom': 12
@@ -489,18 +315,13 @@ def mapa(request):
     return render(request, 'google/map.html', context)
 
 
-"""
-    Recupera información de todas las empresas de la base de datos y la convierte en una lista de diccionarios que contienen
-    los valores de los campos seleccionados. Luego, devuelve una respuesta JSON con esta lista.
-    
-    Parámetros:
-    
-        request (HttpRequest): objeto HttpRequest que representa la solicitud HTTP que se está procesando.
-        
-    Retorna:
-    
-        JsonResponse: respuesta HTTP con una lista de diccionarios que contienen información de las empresas en formato JSON.
-"""
+def mydataBusqueda(request):
+
+    return JsonResponse(mydataJ, safe=False)
+
+''' Función que se encarga de obtener los datos de todas las empresas y empleados, devolverlos en formato JSON.
+ Recibe una solicitud HTTP (request) como parámetro. Primero, se obtienen los datos de todas las empresas y se almacenan en una lista.
+ Luego, se devuelve la lista en formato JSON utilizando la función JsonResponse de Django.'''
 
 def mydata(request):
     result_list = list(Empresas.objects.values('nombre',
@@ -520,19 +341,10 @@ def mydata(request):
 
 
 
-"""
-    Renderiza una plantilla HTML que muestra una lista de empleados asociados a una empresa con un nombre dado.
-    La lista se puede filtrar por nombre completo de empleado mediante una búsqueda.
-
-    Argumentos:
-    
-    - request: solicitud HTTP recibida.
-    - rest: nombre de la empresa de la cual se quiere obtener la lista de empleados.
-
-    Retorna:
-    
-    - Un objeto HttpResponse que contiene la respuesta HTTP resultante.
-"""
+''' Función que se encarga de renderizar la página listaEmp.html con la lista de empleados de una empresa.
+ Recibe una solicitud HTTP (request) y el nombre de la empresa (rest) como parámetros.
+ Primero, se busca la empresa correspondiente al nombre utilizando la función get de Django. 
+Luego, se obtienen los empleados de la empresa utilizando la función filter de Django. '''
 
 @user_login_required
 def vistaListaEmpl(request, rest):
@@ -571,17 +383,7 @@ def vistaListaEmpl(request, rest):
     return render(request, "google/listaEmp.html", context=context)
 
 
-"""
-    Codifica el contenido de un archivo en Base64.
-
-    Argumentos:
-    - file: objeto File del cual se obtendrá el contenido a codificar.
-
-    Retorna:
-    - encoded_string: cadena de texto que representa el contenido del archivo
-                      codificado en Base64.
-"""
-
+'''esta función toma un archivo como entrada, lo lee y lo codifica en Base64. Luego devuelve la cadena codificada en Base64.'''
 def encode_file(file):
     # Lee los datos del archivo
     data = file.read()
@@ -591,16 +393,8 @@ def encode_file(file):
     return (encoded_string)
 
 
-"""
-    Crea un nuevo empleado y lo agrega a la base de datos.
-
-    Argumentos:
-        request (HttpRequest): solicitud HTTP.
-        rest (str): nombre de la empresa.
-
-    Retorna:
-        HttpResponse: respuesta HTTP que redirige a la página del mapa o renderiza el formulario.
-"""
+'''esta función maneja la creación de nuevos empleados en la base de datos. Si se envía un formulario válido (a través de una solicitud POST),
+ crea un objeto Empleados a partir de los datos del formulario y lo guarda en la base de datos.'''
 
 @user_login_required
 def vistaCrearEmpl(request, rest):
@@ -625,25 +419,8 @@ def vistaCrearEmpl(request, rest):
             p.empresa = emp
             archivo = request.FILES['archivo']
             if archivo:
-                # Crear el cliente de almacenamiento de Google Cloud
-                client = storage.Client.from_service_account_json(os.path.join(settings.CREDENCIALES_DIR, 'high-task-380101-567919917d93.json'))
-                # Obtener el bucket
-                bucket = client.get_bucket(settings.GS_BUCKET_NAME)
-                # Crear el nombre del archivo usando el ID del empleado y el nombre del archivo original
-                archivo_nombre = f"{p.pk}-{archivo.name}"
-
-                blob = bucket.blob(archivo_nombre, chunk_size=10*1024*1024)
-                content_type = tipoContenido(archivo.name)
-
-                blob.upload_from_file(
-                    archivo,
-                    content_type=content_type,
-                    size=archivo.size,
-                    num_retries=5,
-                    timeout=120,
-                )
-
-                p.videoEntrevista = f"https://storage.googleapis.com/{bucket.name}/{archivo_nombre}"
+                uploaded_video = uploader.upload_large(archivo, resource_type='video', chunk_size=6000000)
+                p.videoEntrevista = uploaded_video['url']
                 p.entrevista = 's'
 
             p.save()
@@ -666,26 +443,16 @@ def vistaCrearEmpl(request, rest):
         form = empleadoForm(None)
         return render(request, 'Empleados/crearEmp.html', {'form': form})
 
-
-"""
-    Actualiza la información de un empleado existente en la base de datos.
-
-    Argumentos:
-    - request: objeto HttpRequest de Django
-    - rest: nombre de la empresa del empleado (str)
-    - ced: número de documento del empleado (str)
-
-    Retorna:
-    - Si el método de solicitud es 'POST' y el formulario es válido, redirige al usuario a la página principal del sitio web.
-    - Si el método de solicitud es 'POST' y el formulario no es válido, muestra un mensaje de error y redirige al usuario a la página de edición de empleado.
-    - Si el método de solicitud no es 'POST', muestra el formulario de edición de empleado con la información actual del empleado.
-"""
+'''
+esta función maneja la edición de los detalles de un empleado existente. Si se envía un formulario válido (a través de una solicitud POST),
+actualiza los campos correspondientes del objeto Empleados y lo guarda en la base de datos.
+'''
 
 @user_login_required
 def vistaEditarEmpl(request, rest, ced):
     p = Empleados.objects.get(documento=ced)
     archivo_actual = p.videoEntrevista
-    pathEntrevista = rutaEntrevista(archivo_actual) if archivo_actual != '' else None
+    pathEntrevista = p.videoEntrevista if archivo_actual != '' else None
     print(p)
     if request.method == "POST":
         print("Entro 1")
@@ -711,30 +478,36 @@ def vistaEditarEmpl(request, rest, ced):
             if request.POST['uploadFromPC'] != '':
                 imagen = encode_file(request.FILES['uploadFromPC'])
                 p.imagen = imagen
+            # Calcular el límite de tamaño en megabytes
+            limite_bytes = 104857600
+            limite_mb = limite_bytes / (1024 * 1024)
 
-            if archivo_nuevo:
-                print("entro al archivo")
-                client = storage.Client.from_service_account_json(
-                    os.path.join(settings.CREDENCIALES_DIR, 'high-task-380101-567919917d93.json'))
-                bucket = client.get_bucket(settings.GS_BUCKET_NAME)
-                archivo_nombre = f"{p.pk}-{archivo_nuevo.name}"
-                blob = bucket.blob(archivo_nombre, chunk_size=10 * 1024 * 1024)
-                content_type = tipoContenido(archivo_nuevo.name)
+            if archivo_nuevo.size > limite_bytes:
+                print("SE DEVUELVE")
+                messages.error(request, "El archivo es demasiado grande. El límite es de 100 MB.")
+                return render(request, 'Empleados/editarEmp.html', {'form': form, 'emp': p,'path':pathEntrevista})
+            else:
+                if archivo_nuevo:
+                    print(archivo_nuevo.name)
+                    mime_type = tipoContenido(archivo_nuevo.name)
+                    print("SACA EL CONTENIDO PUÑETA")
+                    type, mime = mime_type.split("/")
+                    print(type)
+                    uploaded_video = uploader.upload_large(archivo_nuevo, resource_type='video',  chunk_size=6000000)
+                    p.videoEntrevista = uploaded_video['url']
 
-                blob.upload_from_file(
-                    archivo_nuevo,
-                    content_type=content_type,
-                    size=archivo_nuevo.size,
-                    num_retries=5,
-                    timeout=120,
-                )
-                p.videoEntrevista = f"https://storage.googleapis.com/{bucket.name}/{archivo_nombre}"
-                if archivo_actual:
-                    blob_actual = bucket.blob(pathEntrevista)
-                    blob_actual.delete()
+                    if archivo_actual:
 
+                        # Eliminar el video existente de Cloudinary
+                        public_id = rutaEntrevista(archivo_actual)
+                        id, extension = public_id.split(".")
+                        mime_type = tipoContenido(archivo_actual)
+                        type, mime = mime_type.split("/")
+                        print(type)
+                        uploader.destroy(id,resource_type='video')
             p.save()
             messages.success(request, "EXITOSAMENTE ACTUALIZADO")
+
             return redirect('map')
         else:
             form = empleadoForm(instance=p)
@@ -745,30 +518,14 @@ def vistaEditarEmpl(request, rest, ced):
         return render(request, "Empleados/editarEmp.html", {'form': form, 'emp':p,'path':pathEntrevista})
 
 
-"""
-   Muestra los datos de un empleado y su video de entrevista, si tiene.
-
-   Argumentos:
-       request: HttpRequest, objeto que contiene información sobre la solicitud web actual.
-       rest: str, parámetro correspondiente al nombre del restaurante.
-       ced: str, parámetro correspondiente al documento de identificación del empleado.
-
-   Retorna:
-       HttpResponse con un template HTML que muestra los datos del empleado y el video de entrevista, si tiene.
-"""
-
+'''esta función muestra los detalles de un empleado existente en una página separada.'''
 @user_login_required
 def vistaVerEmpl(request, rest, ced):
     empleados = Empleados.objects.get(documento=ced)
     if empleados.entrevista != 'n':
-        # Obtener instancia del cliente de Cloud Storage
-        client = storage.Client.from_service_account_json(
-            os.path.join(settings.CREDENCIALES_DIR, 'high-task-380101-567919917d93.json'))
-        # Obtener instancia del objeto Bucket
-        bucket = client.get_bucket(settings.GS_BUCKET_NAME)
-        path = rutaEntrevista(empleados.videoEntrevista)
-        blob = bucket.get_blob(path)
-        mime_type = blob.content_type
+        #resource_info = cloudinary.api.resource(empleados.videoEntrevista)
+        #mime_type = resource_info['resource_type']
+        mime_type = tipoContenido(empleados.videoEntrevista)
         context = {
             'emp': rest,
             'empleado': empleados,
@@ -781,19 +538,6 @@ def vistaVerEmpl(request, rest, ced):
             'empleado': empleados,
         }
     return render(request, "Empleados/verPersonal.html", context=context)
-
-
-"""
-    Cambia el estado de un empleado de "Activo" a "Inactivo" o viceversa.
-
-    Argumentos:
-    - request: objeto HttpRequest que representa la solicitud HTTP que se está procesando.
-    - rest: variable que representa el establecimiento al que pertenece el empleado.
-    - ced: variable que representa el número de documento del empleado.
-
-    Retorna:
-    - Un objeto HttpResponse que redirige al usuario a la página "map".
-"""
 
 @user_login_required
 def estadoEmp(request, rest, ced):
@@ -810,33 +554,11 @@ def estadoEmp(request, rest, ced):
     return redirect('map')
 
 
-"""
-    Devuelve el nombre del archivo dado una ruta completa de un archivo almacenado en un bucket de Google Cloud Storage.
-
-    Argumentos:
-    rutaCompleta (str): La ruta completa de un archivo almacenado en un bucket de Google Cloud Storage.
-
-    Retorna:
-    str: El nombre del archivo.
-"""
-
 def rutaEntrevista(rutaCompleta):
     parsed_url = urlparse(rutaCompleta)
     ruta_del_archivo_en_el_bucket = parsed_url.path[1:]
     nombre_del_archivo = ruta_del_archivo_en_el_bucket.split('/')[-1]
     return nombre_del_archivo
-
-
-"""
-    Devuelve el tipo de contenido MIME de un archivo.
-
-    Args:
-    nombreArchivo (str): El nombre del archivo o su extensión.
-
-    Returns:
-    str: El tipo de contenido MIME del archivo.
-"""
-
 
 def tipoContenido(nombreArchivo):
     contenido, encoding = mimetypes.guess_type(nombreArchivo)

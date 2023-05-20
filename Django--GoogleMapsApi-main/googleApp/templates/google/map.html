@@ -2,18 +2,18 @@
 {% block content %} 
 {% load static %}
 
+{% if data %}
 <script>
   $(document).ready(function () {
     $.ajax({
-      url: "{% url 'mydata'%}",
+      url: "{% url 'mydata' %}",
       method: "GET",
       success: function (data) {
         console.log(data);
-        initMap(data);
+         initMap(data);
       },
     });
   });
-
   function initMap(data) {
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: {{zoom}},
@@ -33,18 +33,92 @@
         infoWindow.open(marker.getMap(), marker);
         updateSidebarContent(i); // Actualiza el contenido del sidebar
         showSidebar(); // Despliega el sidebar
-
-        // Guarda la ubicación del marcador en localStorage
-        localStorage.setItem('selectedMarkerLat', marker.getPosition().lat());
-        localStorage.setItem('selectedMarkerLng', marker.getPosition().lng());
       });
     });
 
-    const selectedMarkerLat = localStorage.getItem('selectedMarkerLat');
-    const selectedMarkerLng = localStorage.getItem('selectedMarkerLng');
-    if (selectedMarkerLat && selectedMarkerLng) {
-       map.setCenter({ lat: parseFloat(selectedMarkerLat), lng: parseFloat(selectedMarkerLng) });
+    function updateSidebarContent(markerData) {
+      document.getElementById('inactivar').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('confirmationModal').style.display = 'flex';
+      });
+
+      document.getElementById('continueButton').addEventListener('click', function() {
+        window.location.href = 'inactivarEmpresa/'+markerData.NIT;
+        document.getElementById('confirmationModal').style.display = 'none';
+      });
+
+      document.getElementById('cancelButton').addEventListener('click', function() {
+        document.getElementById('confirmationModal').style.display = 'none';
+      });
+
+
+      const editar = document.querySelector('#editar');
+      editar.addEventListener('click', function() {
+        window.location.href = '/editarEmpresa/'+markerData.NIT;
+      });
+
+      let emp = markerData.nombre;
+      document.getElementById('personal_link').setAttribute('onclick', 'openSidebar(\'/listaEmp/'+emp+'\')');
+
+      $("#sidebar-title").text(markerData.nombre);
+      $("#sidebar-description").html('<strong>DESCRIPCIÓN:</strong> ' + markerData.descripcion);
+      $("#sidebar-nit").html('<strong>NIT:</strong> ' + markerData.NIT);
+      $("#sidebar-mision").html('<strong>MISIÓN:</strong> ' + markerData.mision);
+      $("#sidebar-vision").html('<strong>VISIÓN:</strong> ' + markerData.vision);
+      $("#sidebar-telefono").html('<strong>TELEFONO:</strong> ' + markerData.telefono);
+      $("#sidebar-direccion").html('<strong>DIRECCIÓN:</strong> ' + markerData.direccion);
+      $("#sidebar-pagina").html(markerData.paginaWeb);
+      $("#sidebar-fecha").html('<strong>FECHA DE FUNDACIÓN:</strong> ' + markerData.fechaFundacion);
+      $("#sidebar-email").html('<strong>EMAIL:</strong> ' + markerData.email);
+      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+      $(document).ready(function () {
+        $("#close-sidebar").click(function () {
+          $("#sidebar").hide();
+        });
+      });
     }
+    function showSidebar() {
+      $("#sidebar").show();
+    }
+  }
+  function expandSearch() {
+    var searchInput = document.getElementById("search");
+    searchInput.classList.toggle("expanded");
+  }
+</script>
+{% else %}
+<script>
+$(document).ready(function () {
+    $.ajax({
+      url: "{% url 'mydataBusqueda'%}",
+      method: "GET",
+      success: function (data) {
+        console.log(data);
+         initMap(data);
+      },
+    });
+  });
+  function initMap(data) {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: {{zoom}},
+      center: { lat: {{lati}}, lng: {{longi}} },
+    });
+    const infoWindow = new google.maps.InfoWindow();
+    const markers = data?.map((i) => {
+      const marker = new google.maps.Marker({
+        position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
+        map: map,
+        title: `${i.nombre}`,
+        optimized: false,
+      });
+      marker.addListener("click", () => {
+        infoWindow.close();
+        infoWindow.setContent(marker.getTitle());
+        infoWindow.open(marker.getMap(), marker);
+        updateSidebarContent(i); // Actualiza el contenido del sidebar
+        showSidebar(); // Despliega el sidebar
+      });
+    });
 
     function updateSidebarContent(markerData) {
       document.getElementById('inactivar').addEventListener('click', function(event) {
@@ -88,7 +162,6 @@
         });
       });
     }
-
     function showSidebar() {
       $("#sidebar").show();
     }
@@ -98,6 +171,8 @@
     searchInput.classList.toggle("expanded");
   }
 </script>
+{% endif %}
+
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
     <div class="container-fluid">
@@ -165,6 +240,8 @@
 <div class="pageholder">
   <div class="linkholder">
     <div id="sidebar">
+      <div class="card">
+        <div class="card-body">
       <h3 style="padding-top:2%" id="sidebar-title">Aquí poner empresas</h3>
       <div class="info-container">
       <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
@@ -199,11 +276,11 @@
           <li id="sidebar-telefono"></li>
           <li id="sidebar-direccion"></li>
           <!--<li id="sidebar-ciudad"></li>-->
-          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: AÚN NO ESTA DISPONIBLE</li>
+          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
         </ul>
       </div>
 
-        <h2 class="drawer-subtitulo">Pagina Oficial:</h2>
+        <h2 class="drawer-subtitulo">Sitio Web:</h2>
         <div class="drawer-pagina">
           <a id="sidebar-pagina" href="#" class="color-web"></a>
         </div>
@@ -212,7 +289,8 @@
     <br>
        <center><button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button></center>
     </div>
-
+</div>
+      </div>
 
     <div id="nuevo-sidebar" style="display: none;" >
      <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>

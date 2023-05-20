@@ -10,11 +10,11 @@ function openSidebar(nombre) {
       sidebarContent.innerHTML = html;
     });
 
-  sidebar.style.width = "460px";
+  sidebar.style.width = "880px";
   sidebar.style.height = "70%";
   sidebar.style.position = "fixed";
   sidebar.style.top = "15%";
-  sidebar.style.right = "20%";
+  sidebar.style.right = "18%";
   sidebar.style.backgroundColor = "#f1f1f1";
   sidebar.style.padding = "20px";
   sidebar.style.display = "block";
