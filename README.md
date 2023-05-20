@@ -10,3 +10,13 @@ Asi que si voy a agregar una direccion por ejemplo de Cali. Debo escribir la dir
 
 Juan Camilo Clavijo:
 Se integro la parte de empleados y empresas, se corrigieron algunas cosas de front y se habilito la visualizacion por parte de los clientes.
+
+
+INDICACIONES 10/05/2023
+
+Crear al nivel de la carpeta de la aplicacion, una carpeta que se llame "credenciales" e insertar el json correspondiente.
+
+Esta carpeta no se puede subir al repositorio ya que para el almacenamiento de los videos se esta usando google cloud storage y esas credenciales con propias del proyecto, no se deben hacer publicas.
+
+Adicional instalar la siguiente dependencia:
+    - pip install django-storages[google]
