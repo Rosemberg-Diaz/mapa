@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from google.oauth2 import service_account
+#from google.oauth2 import service_account
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

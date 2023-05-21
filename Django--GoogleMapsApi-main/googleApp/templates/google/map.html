@@ -1,5 +1,5 @@
-{% extends 'google/base.html' %} 
-{% block content %} 
+{% extends 'google/base.html' %}
+{% block content %}
 {% load static %}
 
 {% if data %}
@@ -57,6 +57,11 @@
         window.location.href = '/editarEmpresa/'+markerData.NIT;
       });
 
+      const sede = document.querySelector('#sede');
+      sede.addEventListener('click', function() {
+        window.location.href = '/crearSede/'+markerData.nombre;
+      });
+
       let emp = markerData.nombre;
       document.getElementById('personal_link').setAttribute('onclick', 'openSidebar(\'/listaEmp/'+emp+'\')');
 
@@ -85,6 +90,7 @@
     var searchInput = document.getElementById("search");
     searchInput.classList.toggle("expanded");
   }
+
 </script>
 {% else %}
 <script>
@@ -106,10 +112,10 @@ $(document).ready(function () {
     const infoWindow = new google.maps.InfoWindow();
     const markers = data?.map((i) => {
       const marker = new google.maps.Marker({
-        position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
-        map: map,
-        title: `${i.nombre}`,
-        optimized: false,
+          position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
+          map: map,
+          title: `${i.nombre}`,
+          optimized: false,
       });
       marker.addListener("click", () => {
         infoWindow.close();
@@ -141,6 +147,12 @@ $(document).ready(function () {
         window.location.href = '/editarEmpresa/'+markerData.NIT;
       });
 
+      const sede = document.querySelector('#sede');
+      sede.addEventListener('click', function() {
+        window.location.href = '/crearSede/';
+      });
+
+
       let emp = markerData.nombre;
       document.getElementById('personal_link').setAttribute('onclick', 'openSidebar(\'/listaEmp/'+emp+'\')');
 
@@ -170,141 +182,159 @@ $(document).ready(function () {
     var searchInput = document.getElementById("search");
     searchInput.classList.toggle("expanded");
   }
+
 </script>
 {% endif %}
 
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">GEOSOFT</a>
-  
-      {% if user.rol == 'Administrador' %}
-      <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
-      {% else %}
-      <span class="navbar-text text-white d-flex align-items-center">Bienvenido {{ user.username }}</span>
-      {% endif %}
-  
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <!-- Botón para la barra de búsqueda -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">GEOSOFT</a>
 
-      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-       
-  
-        <form class="d-flex ms-auto ms-3" method="POST">
-          {% csrf_token %}
-          <input class="form-control me-2 flex-grow-1" type="text" id="search" name="search" placeholder="Buscar" aria-label="Search"  style="padding: 12px; border: none; background: white; box-shadow: none; outline: none; ">
-        </form>
-       
-      </div>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-        <button class="btn btn-outline-light me-2 " style="background: transparent; border: none; margin-left: auto;" onClick="expandSearch()">
-          <i class="fas fa-search" style="font-size: 1.2em; color: #ffffff;"></i>
-        </button>
-      </div>
+            {% if user.rol == 'Administrador' %}
+            <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
+            {% else %}
+            <span class="navbar-text text-white d-flex align-items-center">Bienvenido {{ user.username }}</span>
+            {% endif %}
 
-        {% if user.rol == 'Administrador' %}
-        <form class="d-flex position-relative ms-auto me-3">
-         
-          <button type="button" class="btn btn-outline-primary me-2">
-            <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">
-              Crear Empresa
-            </a>
-          </button>
-          <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">
-            Salir
-            <i class="bi bi-arrow-bar-left ms-1"></i>
-          </a>
-        </form>
-        {% else %}
-        
-        <div class="navbar-nav ms-auto">
-          <a class="navbar-text text-white" href="{% url 'logout' %}">
-            Salir
-            <i class="bi bi-arrow-bar-left ms-1"></i>
-          </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Botón para la barra de búsqueda -->
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+
+
+                <form class="d-flex ms-auto ms-3" method="POST">
+                    {% csrf_token %}
+                    <input class="form-control me-2 flex-grow-1" type="text" id="search" name="search"
+                           placeholder="Buscar" aria-label="Search"
+                           style="padding: 12px; border: none; background: white; box-shadow: none; outline: none; ">
+                </form>
+
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                <button class="btn btn-outline-light me-2 "
+                        style="background: transparent; border: none; margin-left: auto;" onClick="expandSearch()">
+                    <i class="fas fa-search" style="font-size: 1.2em; color: #ffffff;"></i>
+                </button>
+            </div>
+
+            {% if user.rol == 'Administrador' %}
+            <form class="d-flex position-relative ms-auto me-3">
+
+                <button type="button" class="btn btn-outline-primary me-2">
+                    <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear"
+                       href="{% url 'crearEmpresa'%}">
+                        Crear Empresa
+                    </a>
+                </button>
+                <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">
+                    Salir
+                    <i class="bi bi-arrow-bar-left ms-1"></i>
+                </a>
+            </form>
+            {% else %}
+
+            <div class="navbar-nav ms-auto">
+                <a class="navbar-text text-white" href="{% url 'logout' %}">
+                    Salir
+                    <i class="bi bi-arrow-bar-left ms-1"></i>
+                </a>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-      </div>
-  
-      <!-- Barra de búsqueda -->
-  
-    </div>
-  </nav>
 
-  
+        <!-- Barra de búsqueda -->
+
+        </div>
+    </nav>
+
+
 </header>
 <div class="pageholder">
-  <div class="linkholder">
-    <div id="sidebar">
-      <div class="card">
-        <div class="card-body">
-      <h3 style="padding-top:2%" id="sidebar-title">Aquí poner empresas</h3>
-      <div class="info-container">
-      <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
-      {% if user.rol == 'Administrador' %}
-      <button class="icon-pencil" style="color:orange" id="editar" title="Editar" ></button>
-      <button type="button" class="icon-block" style="color:red" id="inactivar" title="Borrar"></button>
-      {% else %}
-        <button class="icon-pencil" id="editar" title="Editar" style="display:none;"></button>
-        <button type="button" class="icon-block" id="inactivar" title="Borrar" style="display:none;"></button>
+    <div class="linkholder">
+        <div id="sidebar">
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="padding-top:2%" id="sidebar-title">Aquí poner empresas</h3>
+                    <div class="info-container">
+                        <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
+                        {% if user.rol == 'Administrador' %}
+                        <button class="icon-pencil" style="color:orange" id="editar" title="Editar"></button>
+                        <button type="button" class="icon-block" style="color:red" id="inactivar"
+                                title="Borrar"></button>
+                        {% else %}
+                        <button class="icon-pencil" id="editar" title="Editar" style="display:none;"></button>
+                        <button type="button" class="icon-block" id="inactivar" title="Borrar"
+                                style="display:none;"></button>
 
-        {% endif %}
-        <div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
-          <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar una empresa. ¿Deseas continuar?</p>
-          <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-            <button type="button" id="continueButton" style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Continuar</button>
-            <button type="button" id="cancelButton" style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Cancelar</button>
-          </div>
+                        {% endif %}
+                        <div id="confirmationModal"
+                             style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
+                                <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar
+                                    una empresa. ¿Deseas continuar?</p>
+                                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                                    <button type="button" id="continueButton"
+                                            style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
+                                        Continuar
+                                    </button>
+                                    <button type="button" id="cancelButton"
+                                            style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="drawer-subtitulo">Acerca de:</h2>
+
+                        <div class="drawer-content">
+                            <ul>
+
+                                <li id="sidebar-nit"></li>
+                                <li id="sidebar-fecha"></li>
+                                <li id="sidebar-description"></li>
+                                <li id="sidebar-mision"></li>
+                                <li id="sidebar-vision"></li>
+                                <li id="sidebar-telefono"></li>
+                                <li id="sidebar-direccion"></li>
+                                <!--<li id="sidebar-ciudad"></li>-->
+                                <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
+                            </ul>
+                        </div>
+
+                        <h2 class="drawer-subtitulo">Sitio Web:</h2>
+                        <div class="drawer-pagina">
+                            <a id="sidebar-pagina" href="#" class="color-web"></a>
+                        </div>
+
+                    </div>
+                    <br>
+                    <center>
+                        <button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button>
+                        <button class="btn btn-outline-success" id="sede">Crear Sede</button>
+                    </center>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <h2 class="drawer-subtitulo">Acerca de:</h2>
-      
-      <div class="drawer-content">
-        <ul>
-          
-          <li id="sidebar-nit"></li>
-          <li id="sidebar-fecha"></li>
-          <li id="sidebar-description"></li>
-          <li id="sidebar-mision"></li>
-          <li id="sidebar-vision"></li>
-          <li id="sidebar-telefono"></li>
-          <li id="sidebar-direccion"></li>
-          <!--<li id="sidebar-ciudad"></li>-->
-          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
-        </ul>
-      </div>
-
-        <h2 class="drawer-subtitulo">Sitio Web:</h2>
-        <div class="drawer-pagina">
-          <a id="sidebar-pagina" href="#" class="color-web"></a>
+        <div id="nuevo-sidebar" style="display: none;">
+            <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
+            <div id="sidebar-content"></div>
         </div>
+        <div class="mapholder">
+            <div id="map"></div>
 
+            <script
+                    src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap&v=weekly"
+                    defer
+            ></script>
+        </div>
     </div>
-    <br>
-       <center><button class="btn btn-outline-primary" id="personal_link" onclick="">Ver personal</button></center>
-    </div>
-</div>
-      </div>
-
-    <div id="nuevo-sidebar" style="display: none;" >
-     <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
-        <div id="sidebar-content"></div>
-    </div>
-    <div class="mapholder">
-      <div id="map"></div>
-
-      <script
-        src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap&v=weekly"
-        defer
-      ></script>
-    </div>
-  </div>
 </div>
 <script type="text/javascript" src="{% static 'javascript/sidebar.js' %}"></script>
 <style>
@@ -339,6 +369,7 @@ $(document).ready(function () {
       background-color: #fff; 
       box-shadow: 0 4px 6px rgba(0,0,0,.1);
     }
-  </style>
-  
+
+</style>
+
 {% endblock content %}

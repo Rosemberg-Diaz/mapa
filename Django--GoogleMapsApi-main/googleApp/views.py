@@ -21,14 +21,14 @@ from googleApp.backends import CustomAuthBackend
 from .decorators import user_login_required
 from bson.objectid import ObjectId
 #Importaciones para cloud storage
-from google.cloud import storage
+#from google.cloud import storage
 from django.conf import settings
 import os
 from urllib.parse import urlparse
 import mimetypes
 
 #cloudinary
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
+#from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from cloudinary import uploader
 from cloudinary import CloudinaryResource
 import cloudinary.utils
@@ -156,32 +156,31 @@ def crearEmpresa(request):
 '''se utiliza para crear una nueva sede de una empresa. Al igual que en la función anterior,
  se obtienen todas las ciudades disponibles de la base de datos y todas las empresas existentes.
  Si la solicitud del usuario es un método POST, se valida la información ingresada por el usuario utilizando un formulario. '''
-#
-# @user_login_required
-# def crearSede(request):
-#     ciudades = Ciudades.objects.all()
-#     empresas = Empresas.objects.all()
-#     if request.method == 'POST':
-#         details = sedeForm(request.POST)
-#         if details.is_valid():
-#             nombre = request.POST['nombre']
-#             post = details.save(commit=False)
-#             post.save()
-#             p = Sedes.objects.get(nombre=nombre)
-#             ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
-#             empresa = Empresas.objects.get(nombre=request.POST['empresa'])
-#             p.ciudad = ciudad
-#             p.empresa = empresa
-#             p.save()
-#             messages.sucess(request, "EXITOSAMENTE CREADO")
-#             return redirect('geocode_club', request.POST['nombre'])
-#         else:
-#             messages.error(request, "ERROR EN LA CREACIÓN")
-#             return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
-#     else:
-#         form = sedeForm(None)
-#         messages.error(request, "ERROR EN LA CREACIÓN")
-#         return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
+
+@user_login_required
+def crearSede(request, rest):
+    ciudades = Ciudades.objects.all()
+    empresas = Empresas.objects.all()
+    if request.method == 'POST':
+        details = sedeForm(request.POST)
+        if details.is_valid():
+            nombre = request.POST['nombre']
+            post = details.save(commit=False)
+            post.save()
+            s = Sedes.objects.get(nombre=nombre)
+            ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
+            empresa = Empresas.objects.get(nombre=rest)
+            s.ciudad = ciudad
+            s.empresa = empresa
+            s.save()
+            messages.success(request, "SEDE EXITOSAMENTE CREADA")
+            return redirect('geocode_club_sede', request.POST['nombre'])
+        else:
+            messages.error(request, "ERROR EN LA CREACIÓN")
+            return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
+    else:
+        form = sedeForm(None)
+        return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
 
 
 
@@ -221,6 +220,32 @@ def editarEmpresa(request, NIT):
 
 
 
+@user_login_required
+def editarSede(request, nombre):
+    sede = get_object_or_404(Sedes, nombre=nombre)
+    ciudades = Ciudades.objects.all()
+    empresas = Empresas.objects.all()
+
+    if request.method == 'POST':
+        form = sedeForm(request.POST, instance=sede)
+        if form.is_valid():
+            post = form.save(commit=False)
+            ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
+            #empresa = Empresas.objects.get(nombre=request.POST['empresa'])
+            post.ciudad = ciudad
+            #post.empresa = empresa
+            post.save()
+            messages.success(request, "Sede actualizada exitosamente")
+            return redirect('geocode_club_sede', sede.nombre)
+        else:
+            messages.error(request, "Error al actualizar la sede")
+            return render(request, 'Sedes/edit.html',
+                          {'form': form, 'ciudades': ciudades, 'nombre': nombre, 'empresas': empresas})
+    else:
+        form = sedeForm(instance=sede)
+    return render(request, 'Sedes/edit.html', {'form': form, 'ciudades': ciudades, 'nombre': nombre, 'empresas': empresas})
+
+
 '''Función que se encarga de cambiar el estado de una empresa a inactivo. Recibe una solicitud HTTP (request) y un número de identificación tributaria (NIT) como parámetros.
  Primero se busca la empresa correspondiente a NIT utilizando la función get_object_or_404 de Django. 
 Luego, se cambia el valor del estado de la empresa a False y se guarda en la base de datos. '''
@@ -232,6 +257,13 @@ def inactivarEmpresa(request, NIT):
     messages.success(request, "LA EMPRESA SE INACTIVO CORRECTAMENTE")
     return redirect('geocode_club', empresa.NIT)
 
+
+def inactivarSede(request, nombre):
+    sede = get_object_or_404(Sedes, nombre=nombre)
+    sede.estado = False
+    sede.save()
+    messages.success(request, "LA SEDE SE INACTIVO CORRECTAMENTE")
+    return redirect('geocode_club_sede', sede.nombre)
 
 
 
@@ -264,6 +296,29 @@ def geocode_club(request, pk):
     return render(request, 'google/empty.html', context)
 
 
+def geocode_club_sede(request, pk):
+    sede = Sedes.objects.get(nombre=pk)
+    # check whether we have the data in the database that we need to calculate the geocode
+    if sede.direccion:
+        # creating string of existing location data in database
+        adress_string = str(sede.direccion) + ', ' + str(sede.ciudad) + ", Valle del Cauca, Colombia"
+
+        # geocode the string
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        intermediate = json.dumps(gmaps.geocode(str(adress_string)))
+        intermediate2 = json.loads(intermediate)
+        latitude = intermediate2[0]['geometry']['location']['lat']
+        longitude = intermediate2[0]['geometry']['location']['lng']
+        # save the lat and long in our database
+        sede.latitude = latitude
+        sede.longitude = longitude
+        sede.save()
+        return redirect('map_sede')
+    else:
+        return redirect('map_sede')
+    return render(request, 'google/empty.html', context)
+
+
 
 '''Función que se encarga de renderizar la página map.html con los datos necesarios. 
 Recibe una solicitud HTTP (request) como parámetro. Primero, se obtiene el usuario que ha realizado la solicitud utilizando la función get_user de Django. 
@@ -284,6 +339,51 @@ def mapa(request):
                 mydataJ.append({'nombre': emp.nombre,
                          'latitude': emp.latitude,
                         'longitude': emp.longitude
+                })
+        if(len(mydataJ)==0):
+            context = {
+                'key': key,
+                'user': user,
+                'data': True,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'zoom': 12
+            }
+        else:
+            context = {
+                'key': key,
+                'user': user,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'data': False,
+                'zoom': 12
+            }
+    else:
+        context = {
+            'key': key,
+            'user': user,
+            'data': True,
+            'lati': 3.43722,
+            'longi': -76.5225,
+            'zoom': 12
+        }
+    return render(request, 'google/map.html', context)
+
+
+def mapa_sede(request):
+    user = get_user(request)
+    key = settings.GOOGLE_API_KEY
+    sede =  Sedes.objects.all()
+    nombres= []
+    for i in sede:
+        nombres.append(i.nombre)
+    if request.method == 'POST':
+        for nombre in nombres:
+            if request.POST['search'] in nombre:
+                sed = Sedes.objects.get(nombre=nombre)
+                mydataJ.append({'nombre': sed.nombre,
+                         'latitude': sed.latitude,
+                        'longitude': sed.longitude
                 })
         if(len(mydataJ)==0):
             context = {
