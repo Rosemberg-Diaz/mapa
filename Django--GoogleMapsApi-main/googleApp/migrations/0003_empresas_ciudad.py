@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='empresas',
             name='ciudad',
-            field=models.ForeignKey(default='d', on_delete=django.db.models.deletion.CASCADE, to='google.ciudades'),
+            field=models.ForeignKey(default='d', on_delete=django.db.models.deletion.CASCADE, to='googleApp.ciudades'),
         ),
     ]

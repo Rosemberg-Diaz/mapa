@@ -123,10 +123,23 @@ Si el formulario es válido, se crea una nueva entrada en la tabla de Empresas d
 @user_login_required
 def crearEmpresa(request):
     ciudades = Ciudades.objects.all()
+    servicios = Servicios.objects.all()
+    especialidades = Especialidades.objects.all()
     if request.method == 'POST':
         details = empresaForm(request.POST)
+        print("antes de")
+        print(details.is_valid())
+        print("no sé")
         if details.is_valid():
             nit = request.POST['NIT']
+            especialidades_ids = request.POST.getlist('especialidades')
+            servicios_ids = request.POST.getlist('servicios')
+            print(especialidades_ids)
+            print(servicios_ids)
+            especialidades_seleccionadas = Especialidades.objects.filter(_id=especialidades_ids)
+            servicios_seleccionados = Servicios.objects.filter(_id=servicios_ids)
+            print(especialidades_seleccionadas)
+            print(servicios_seleccionados)
             if len(nit) != 9 or not nit.isdigit():
                 details.add_error('NIT', 'El NIT debe ser un número de 9 dígitos')
                 return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
@@ -141,15 +154,19 @@ def crearEmpresa(request):
             p.estado = True
             p.ciudad = ciudad
             p.fechaFundacion = request.POST['fechaFundacion']
+            p.especialidades.set(especialidades_seleccionadas)
+            p.servicios.set(servicios_seleccionados)
             p.save()
             messages.success(request, "EMPRESA EXITOSAMENTE CREADA")
             return redirect('geocode_club', request.POST['NIT'])
         else:
             messages.error(request, "ERROR EN LA CREACIÓN")
-            return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
+            return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades,
+                                                            "especialidades":especialidades, "servicios":servicios})
     else:
         form = empresaForm(None)
-        return render(request, 'Empresas/create.html', {'form': form, 'ciudades': ciudades})
+        return render(request, 'Empresas/create.html', {'form': form, 'ciudades': ciudades,
+                                                        "especialidades":especialidades, "servicios":servicios})
 
 
 

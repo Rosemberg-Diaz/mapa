@@ -13,6 +13,27 @@ class Ciudades(models.Model):
     def __str__(self):
         return self.nombre
 
+class Servicios(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'Servicios'
+
+    def __str__(self):
+        return self.nombre
+
+
+class Especialidades(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'Especialidades'
+
+    def __str__(self):
+        return self.nombre
+
 class Empresas(models.Model):
     NIT = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -28,6 +49,8 @@ class Empresas(models.Model):
     direccion = models.CharField(max_length=500)
     latitude = models.FloatField()
     longitude = models.FloatField()
+    especialidades = models.ManyToManyField(Especialidades)
+    servicios = models.ManyToManyField(Servicios)
 
     class Meta:
         db_table = 'Empresas'

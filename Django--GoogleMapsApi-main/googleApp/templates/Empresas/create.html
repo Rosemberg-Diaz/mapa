@@ -1,6 +1,8 @@
 {% extends 'google/base.html' %}
 {% block content %}
 {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
   <link rel="stylesheet" type="text/css" href="{% static 'css/estiloCrear.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/fontello.css' %}">
 
@@ -39,6 +41,27 @@
                         </div>
                     </div>
 
+
+                     <div class="form-group">
+                        <label for="id_especialidades">Especialidades:</label>
+                        <select name="especialidades" id="id_especialidades" class="select2 form-control" multiple>
+                          {% for especialidad in especialidades %}
+                            <option value="{{ especialidad.pk }}">{{ especialidad.nombre }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="id_servicios">Servicios:</label>
+                        <select name="servicios" id="id_servicios" class="form-control select2" multiple>
+                          {% for servicio in servicios %}
+                            <option value="{{ servicio.pk }}">{{ servicio.nombre }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+
+
                 <button class="btn btn-default">
                     Enviar
                 </button>
@@ -47,5 +70,10 @@
     </div>
   </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('.select2').select2();
+});
+</script>
 {% endblock %}
