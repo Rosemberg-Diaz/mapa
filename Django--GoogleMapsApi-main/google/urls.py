@@ -1,7 +1,7 @@
 from .views import *
 from django.urls import path, include
 from google import views as view
-
+'La página define las rutas y direcciones URL del proyecto. Cada ruta especifica una URL y la función de vista asociada que se ejecutará cuando se acceda a esa URL en el navegador.'
 urlpatterns = [
    path('', view.vistaBase, name='inicio'),
    path('registro/', view.registro, name='registro'),

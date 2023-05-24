@@ -2,7 +2,7 @@ from djongo import models
 from django.db import models as model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 # Create your models here.
-
+'''El modelo Ciudades representa una ciudad con dos campos: _id y nombre. El campo _id es un campo de identificación único y nombre es el nombre de la ciudad.'''
 class Ciudades(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -12,7 +12,10 @@ class Ciudades(models.Model):
 
     def __str__(self):
         return self.nombre
-
+    
+'''El modelo Empresas representa una empresa con varios campos, como NIT (número de identificación tributaria), 
+nombre, descripcion, telefono, ciudad (que es una clave foránea que se relaciona con el modelo Ciudades), 
+fechaFundacion, email, mision, vision, paginaWeb, estado, direccion, latitude y longitude (para la ubicación geográfica de la empresa en la api de google).'''
 class Empresas(models.Model):
     NIT = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -51,7 +54,9 @@ class Empresas(models.Model):
 
 #    def __str__(self):
 #        return str(self.latitude) + str(self.longitude)
-
+'''El modelo Empleados representa un empleado de una empresa con campos como
+ nombres, apellidos, experienciaCargo, tipoDoc, documento, cargo, estado, fechaNacimiento, experiencia,
+ videoEntrevista, telefono, imagen, entrevista, permiso, email y empresa (que es una clave foránea que se relaciona con el modelo Empresas).'''
 class Empleados(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
@@ -76,7 +81,8 @@ class Empleados(models.Model):
     def __str__(self):
         return self.nombres
 
-
+'''El modelo CustomUserManager es un administrador personalizado para el modelo de usuario personalizado
+. Define métodos para crear usuarios y superusuarios.'''
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, contraseña, **extra_fields):
         if not email:
@@ -111,6 +117,10 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+'''El modelo Usuarios es una implementación personalizada del modelo de usuario proporcionado por Django llamado AbstractBaseUser. Este modelo de usuario personalizado se utiliza para autenticación y gestión de usuarios en el sitio. Tiene campos como _id, username, contraseña, email y rol. El campo USERNAME_FIELD se establece en 'email' para autenticar a los usuarios utilizando su correo electrónico. 
+También se define un administrador personalizado (CustomUserManager) para este modelo de usuario.
+Además, el modelo Usuarios tiene métodos adicionales para verificar los permisos del usuario y para comprobar si el usuario es un administrador o un cliente.
+'''
 
 class Usuarios(AbstractBaseUser):
     _id = models.ObjectIdField(primary_key=True)

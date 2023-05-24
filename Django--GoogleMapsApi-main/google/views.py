@@ -454,7 +454,7 @@ def vistaVerEmpl(request, rest, ced):
         'empleado': empleados,
     }
     return render(request, "Empleados/verPersonal.html", context=context)
-
+''' esta función busca un empleado en la base de datos por su número de documento, cambia su estado de "Activo" a "Inactivo" o viceversa, guarda los cambios en la base de datos '''
 @user_login_required
 def estadoEmp(request, rest, ced):
     empleados = Empleados.objects.get(documento=ced)
