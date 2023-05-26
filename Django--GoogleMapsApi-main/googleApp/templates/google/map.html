@@ -70,7 +70,31 @@
       $("#sidebar-pagina").html(markerData.paginaWeb);
       $("#sidebar-fecha").html('<strong>FECHA DE FUNDACIÓN:</strong> ' + markerData.fechaFundacion);
       $("#sidebar-email").html('<strong>EMAIL:</strong> ' + markerData.email);
-      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad__nombre);
+
+
+
+     $.ajax({
+    url: '/obtener_Ser_Esp/',
+    data: {nit: markerData.NIT},
+    dataType: 'json',
+    success: function(response) {
+        var listaServicios = response.servicios;
+        var listaEspecialidades = response.especialidades;
+
+        var serviciosHTML = '<strong>SERVICIOS:</strong> ';
+        serviciosHTML += listaServicios.join(', ');
+        $("#sidebar-servicios").html(serviciosHTML);
+
+        var especialidadesHTML = '<strong>ESPECIALIDADES:</strong> ';
+        especialidadesHTML += listaEspecialidades.join(', ');
+        $("#sidebar-especialidades").html(especialidadesHTML);
+    }
+});
+
+
+
+
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -154,8 +178,9 @@ $(document).ready(function () {
       $("#sidebar-pagina").html(markerData.paginaWeb);
       $("#sidebar-fecha").html('<strong>FECHA DE FUNDACIÓN:</strong> ' + markerData.fechaFundacion);
       $("#sidebar-email").html('<strong>EMAIL:</strong> ' + markerData.email);
-      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
-
+      $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad__nombre);
+      $("#sidebar-especialidades").html('<strong>ESPECIALIDADES:</strong> ' + markerData.especialidades__nombre);
+      $("#sidebar-servicios").html('<strong>SERVICIOS:</strong> ' + markerData.servicios__nombre);
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -275,8 +300,9 @@ $(document).ready(function () {
           <li id="sidebar-vision"></li>
           <li id="sidebar-telefono"></li>
           <li id="sidebar-direccion"></li>
-          <!--<li id="sidebar-ciudad"></li>-->
-          <li>ESPECIALIDADES Y SERVICIOS DE LA EMPRESA: ESTA OPCIÓN AÚN NO ESTA DISPONIBLE</li>
+          <li id="sidebar-ciudad"></li>
+          <li id="sidebar-especialidades"></li>
+          <li id="sidebar-servicios"></li>
         </ul>
       </div>
 

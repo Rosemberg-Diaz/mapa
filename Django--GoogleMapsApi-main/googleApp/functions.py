@@ -1,5 +1,5 @@
 import base64
-
+'''La función encode_img(nombre) recibe el nombre de un archivo de imagen como entrada y devuelve una representación codificada de la imagen en formato base64.'''
 def encode_img(nombre):
     image = open(nombre, 'rb')
     image_read = image.read()

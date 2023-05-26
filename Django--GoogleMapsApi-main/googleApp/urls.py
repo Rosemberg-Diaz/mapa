@@ -1,7 +1,7 @@
 from .views import *
 from django.urls import path, include
 from googleApp import views as view
-
+'La página define las rutas y direcciones URL del proyecto. Cada ruta especifica una URL y la función de vista asociada que se ejecutará cuando se acceda a esa URL en el navegador.'
 urlpatterns = [
    path('', view.vistaBase, name='inicio'),
    path('registro/', view.registro, name='registro'),
@@ -12,6 +12,7 @@ urlpatterns = [
    path('geocode/club/<int:pk>',view.geocode_club, name="geocode_club"),
    path('mapa/',view.mapa, name="map"),
    path('mydata',view.mydata, name="mydata"),
+   path('obtener_Ser_Esp/',view.obtener_Ser_Esp, name="obtener_Ser_Esp"),
    path('crearEmpresa', view.crearEmpresa, name='crearEmpresa'),
    path('editarEmpresa/<NIT>', view.editarEmpresa, name='editarEmpresa'),
    path('inactivarEmpresa/<NIT>', view.inactivarEmpresa, name='inactivarEmpresa'),

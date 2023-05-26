@@ -19,7 +19,8 @@ import base64
 from django.contrib.auth import logout, login as auth_login
 from googleApp.backends import CustomAuthBackend
 from .decorators import user_login_required
-from bson.objectid import ObjectId
+
+from bson import ObjectId
 #Importaciones para cloud storage
 from google.cloud import storage
 from django.conf import settings
@@ -133,13 +134,9 @@ def crearEmpresa(request):
         if details.is_valid():
             nit = request.POST['NIT']
             especialidades_ids = request.POST.getlist('especialidades')
+            especialidades = [ObjectId(especialidad_id) for especialidad_id in especialidades_ids]
             servicios_ids = request.POST.getlist('servicios')
-            print(especialidades_ids)
-            print(servicios_ids)
-            especialidades_seleccionadas = Especialidades.objects.filter(_id=especialidades_ids)
-            servicios_seleccionados = Servicios.objects.filter(_id=servicios_ids)
-            print(especialidades_seleccionadas)
-            print(servicios_seleccionados)
+            servicios = [ObjectId(especialidad_id) for especialidad_id in servicios_ids]
             if len(nit) != 9 or not nit.isdigit():
                 details.add_error('NIT', 'El NIT debe ser un número de 9 dígitos')
                 return render(request, "Empresas/create.html", {'form': details, 'ciudades': ciudades})
@@ -154,8 +151,8 @@ def crearEmpresa(request):
             p.estado = True
             p.ciudad = ciudad
             p.fechaFundacion = request.POST['fechaFundacion']
-            p.especialidades.set(especialidades_seleccionadas)
-            p.servicios.set(servicios_seleccionados)
+            p.servicios.set(servicios)
+            p.especialidades.set(especialidades)
             p.save()
             messages.success(request, "EMPRESA EXITOSAMENTE CREADA")
             return redirect('geocode_club', request.POST['NIT'])
@@ -210,6 +207,8 @@ se actualiza la entrada en la tabla de Empresas de la base de datos y se guarda'
 def editarEmpresa(request, NIT):
     empresa = get_object_or_404(Empresas, NIT=NIT)
     ciudades = Ciudades.objects.all()
+    servicios = Servicios.objects.all()
+    especialidades = Especialidades.objects.all()
 
     if request.method == 'POST':
         form = empresaForm(request.POST, instance=empresa)
@@ -226,15 +225,27 @@ def editarEmpresa(request, NIT):
             post.ciudad = ciudad
             post.fechaFundacion = fechaFundacion
             post.save()
+
+            especialidades_ids = request.POST.getlist('especialidades')
+            servicios_ids = request.POST.getlist('servicios')
+
+            especialidades = [ObjectId(especialidad_id) for especialidad_id in especialidades_ids]
+            servicios = [ObjectId(especialidad_id) for especialidad_id in servicios_ids]
+
+            post.especialidades.clear()
+            post.servicios.clear()
+
+            post.especialidades.set(especialidades)
+            post.servicios.set(servicios)
+
             messages.success(request, "EXITOSAMENTE ACTUALIZADO")
             return redirect('geocode_club', empresa.NIT)
         else:
             messages.error(request, "ERROR EN LA ACTUALIZACIÓN DE DATOS")
-            return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
+            return render(request, "Empresas/edit.html", {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa, 'especialidades': especialidades, 'servicios': servicios})
     else:
         form = empresaForm(instance=empresa)
-        return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa})
-
+        return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa, 'especialidades': especialidades, 'servicios': servicios})
 
 
 
@@ -352,10 +363,25 @@ def mydata(request):
                                                'direccion',
                                                'latitude',
                                                'longitude',
+                                               'especialidades__nombre',
+                                               # Accede al campo 'nombre' de la relación especialidades
+                                               'servicios__nombre',
+                                               'ciudad__nombre'
                                                ))
 
     return JsonResponse(result_list, safe=False)
 
+
+
+
+def obtener_Ser_Esp(request):
+    nit = request.GET.get('nit', '')  # Obtén el NIT de la empresa desde la solicitud GET
+    empresa = Empresas.objects.get(NIT=nit)
+    servicios = empresa.servicios.values('nombre').distinct()
+    especialidades = empresa.especialidades.values('nombre').distinct()
+    lista_servicios = [servicio['nombre'] for servicio in servicios]
+    lista_especialidades = [especialidad['nombre'] for especialidad in especialidades]
+    return JsonResponse({'servicios': lista_servicios, 'especialidades': lista_especialidades})
 
 
 ''' Función que se encarga de renderizar la página listaEmp.html con la lista de empleados de una empresa.
@@ -556,6 +582,8 @@ def vistaVerEmpl(request, rest, ced):
         }
     return render(request, "Empleados/verPersonal.html", context=context)
 
+
+''' esta función busca un empleado en la base de datos por su número de documento, cambia su estado de "Activo" a "Inactivo" o viceversa, guarda los cambios en la base de datos '''
 @user_login_required
 def estadoEmp(request, rest, ced):
     empleados = Empleados.objects.get(documento=ced)
