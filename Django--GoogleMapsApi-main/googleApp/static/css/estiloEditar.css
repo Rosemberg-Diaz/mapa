@@ -186,3 +186,36 @@ p {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
 }
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+  color: #343a40;
+}
+
+.select2-container--default .select2-selection--multiple {
+  border-radius: 20px;
+  height: auto !important;
+  min-height: 38px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  line-height: 28px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__arrow {
+  height: 34px;
+  top: 2px;
+}
