@@ -14,6 +14,7 @@ urlpatterns = [
     path('mapa/', view.mapa, name="map"),
     path('mapa_sede/', view.mapa_sede, name="map_sede"),
     path('mydata', view.mydata, name="mydata"),
+    path('mydataSede', view.mydataSede, name="mydataSede"),
     path('crearEmpresa', view.crearEmpresa, name='crearEmpresa'),
     path('editarEmpresa/<NIT>', view.editarEmpresa, name='editarEmpresa'),
     path('inactivarEmpresa/<NIT>', view.inactivarEmpresa, name='inactivarEmpresa'),

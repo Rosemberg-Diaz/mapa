@@ -37,7 +37,7 @@ class Empresas(models.Model):
 
 class Sedes(models.Model):
    _id = models.ObjectIdField(primary_key=True)
-   nombre = models.CharField(max_length=100)
+   nombre = models.CharField(max_length=100, unique=True)
    telefono = models.CharField(max_length=100)
    direccion = models.CharField(max_length=100)
    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE)

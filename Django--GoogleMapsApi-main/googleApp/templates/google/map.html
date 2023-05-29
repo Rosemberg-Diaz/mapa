@@ -4,36 +4,62 @@
 
 {% if data %}
 <script>
+
   $(document).ready(function () {
     $.ajax({
       url: "{% url 'mydata' %}",
       method: "GET",
       success: function (data) {
-        console.log(data);
-         initMap(data);
+        console.log(data.result_list, data.result_list2);
+         initMap(data.result_list, data.result_list2);
       },
     });
   });
-  function initMap(data) {
+
+  function initMap(data, dataSede) {
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: {{zoom}},
       center: { lat: {{lati}}, lng: {{longi}} },
     });
     const infoWindow = new google.maps.InfoWindow();
     const markers = data?.map((i) => {
-      const marker = new google.maps.Marker({
-        position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
-        map: map,
-        title: `${i.nombre}`,
-        optimized: false,
-      });
-      marker.addListener("click", () => {
-        infoWindow.close();
-        infoWindow.setContent(marker.getTitle());
-        infoWindow.open(marker.getMap(), marker);
-        updateSidebarContent(i); // Actualiza el contenido del sidebar
-        showSidebar(); // Despliega el sidebar
-      });
+      if(i.estado){
+          const marker = new google.maps.Marker({
+            position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
+            map: map,
+            title: `${i.nombre}`,
+            optimized: false,
+          });
+          marker.addListener("click", () => {
+            infoWindow.close();
+            infoWindow.setContent(marker.getTitle());
+            infoWindow.open(marker.getMap(), marker);
+            updateSidebarContent(i); // Actualiza el contenido del sidebar
+            showSidebar(); // Despliega el sidebar
+          });
+      }
+
+    });
+
+    const markers2 = dataSede?.map((i) => {
+    const image =
+    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+      if(i.estado){
+          const markerSede = new google.maps.Marker({
+            position: { lat: parseFloat(i.latitude), lng: parseFloat(i.longitude) },
+            map: map,
+            title: `${i.nombre}`,
+            icon: image,
+            optimized: false,
+          });
+          markerSede.addListener("click", () => {
+            infoWindow.close();
+            infoWindow.setContent(markerSede.getTitle());
+            infoWindow.open(markerSede.getMap(), markerSede);
+            updateSidebarContentSede(i); // Actualiza el contenido del sidebar
+            showSidebarSede(); // Despliega el sidebar
+          });
+      }
     });
 
     function updateSidebarContent(markerData) {
@@ -82,10 +108,56 @@
         });
       });
     }
+
+
+    function updateSidebarContentSede(markerData) {
+        document.getElementById('inactivarSede').addEventListener('click', function(event) {
+          event.preventDefault();
+          document.getElementById('confirmationModal').style.display = 'flex';
+        });
+
+        document.getElementById('continueButton').addEventListener('click', function() {
+          window.location.href = 'inactivarSede/'+markerData.nombre;
+          document.getElementById('confirmationModal').style.display = 'none';
+        });
+
+        document.getElementById('cancelButton').addEventListener('click', function() {
+          document.getElementById('confirmationModal').style.display = 'none';
+        });
+
+
+        const editar = document.querySelector('#editarSede');
+        editar.addEventListener('click', function() {
+          window.location.href = '/editarSede/'+markerData.nombre;
+        });
+
+        const sede = document.querySelector('#sede');
+        sede.addEventListener('click', function() {
+          window.location.href = '/crearSede/'+markerData.nombre;
+        });
+
+        $("#sidebarSede-title").text(markerData.nombre);
+        $("#sidebarSede-empresa").html('<strong>EMPRESA:</strong> ' + markerData.empresa);
+        $("#sidebarSede-telefono").html('<strong>TELEFONO:</strong> ' + markerData.telefono);
+        $("#sidebarSede-direccion").html('<strong>DIRECCIÓN:</strong> ' + markerData.direccion);
+        $("#sidebarSede-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+        $(document).ready(function () {
+          $("#close-sidebar").click(function () {
+            $("#sidebarSede").hide();
+          });
+        });
+      }
+
+
     function showSidebar() {
       $("#sidebar").show();
     }
+
+    function showSidebarSede() {
+        $("#sidebarSede").show();
+      }
   }
+
   function expandSearch() {
     var searchInput = document.getElementById("search");
     searchInput.classList.toggle("expanded");
@@ -321,6 +393,55 @@ $(document).ready(function () {
                 </div>
             </div>
         </div>
+        <div id="sidebarSede">
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="padding-top:2%" id="sidebarSede-title">Aquí poner sedes</h3>
+                    <div class="info-container">
+                        <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
+                        {% if user.rol == 'Administrador' %}
+                        <button class="icon-pencil" style="color:orange" id="editarSede" title="Editar"></button>
+                        <button type="button" class="icon-block" style="color:red" id="inactivarSede"
+                                title="Borrar"></button>
+                        {% else %}
+                        <button class="icon-pencil" id="editarSede" title="Editar" style="display:none;"></button>
+                        <button type="button" class="icon-block" id="inactivarSede" title="Borrar"
+                                style="display:none;"></button>
+
+                        {% endif %}
+                        <div id="confirmationModal"
+                             style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
+                                <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar
+                                    una sede. ¿Deseas continuar?</p>
+                                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                                    <button type="button" id="continueButton"
+                                            style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
+                                        Continuar
+                                    </button>
+                                    <button type="button" id="cancelButton"
+                                            style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="drawer-subtitulo">Acerca de:</h2>
+
+                        <div class="drawer-content">
+                            <ul>
+                                <li id="sidebarSede-telefono"></li>
+                                <li id="sidebarSede-direccion"></li>
+                                <li id="sidebarSede-ciudad"></li>
+                                <li id="sidebarSede-empresa"></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div id="nuevo-sidebar" style="display: none;">
             <button class="btn btn-outline-danger" id="sidebar-close" onclick="closeSidebar()">Cerrar</button>
@@ -373,3 +494,23 @@ $(document).ready(function () {
 </style>
 
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
