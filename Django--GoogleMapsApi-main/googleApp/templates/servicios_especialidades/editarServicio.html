@@ -1,0 +1,12 @@
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+
+<form id="editarServicioForm" method="post">
+          {% csrf_token %}
+     <input type="hidden" name="servicio_id" id="servicioIdInput" value="">
+          {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+    {% endblock %}

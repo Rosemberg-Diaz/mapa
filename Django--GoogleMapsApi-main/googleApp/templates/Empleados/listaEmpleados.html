@@ -1,0 +1,176 @@
+
+<style type="text/css">
+.styled-table tbody tr { border-bottom: 1px solid #dddddd; } .styled-table tbody tr:nth-of-type(even) { background-color: #f3f3f3; } .styled-table tbody tr:last-of-type { border-bottom: 2px solid #009879; }
+        datos {border:1px solid #ccc;padding:10px;font-size:1em;}
+
+        datos tr:nth-child(even) {background:#ccc;}
+
+        datos td {padding:5px;}
+
+        datos tr.noSearch {background:White;font-size:0.8em;}
+
+        datos tr.noSearch td {padding-top:10px;text-align:right;}
+
+        .hide {display:none;}
+
+        .red {color:Red;}
+</style>
+
+<script>
+        function doSearch()
+
+        {
+
+            const tableReg = document.getElementById('datos');
+
+            const searchText = document.getElementById('searchTerm').value.toLowerCase();
+
+            let total = 0;
+
+
+
+            // Recorremos todas las filas con contenido de la tabla
+
+            for (let i = 1; i < tableReg.rows.length; i++) {
+
+                // Si el td tiene la clase "noSearch" no se busca en su cntenido
+
+                if (tableReg.rows[i].classList.contains("noSearch")) {
+
+                    continue;
+
+                }
+
+
+
+                let found = false;
+
+                const cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+
+                // Recorremos todas las celdas
+
+                for (let j = 0; j < cellsOfRow.length && !found; j++) {
+
+                    const compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+
+                    // Buscamos el texto en el contenido de la celda
+
+                    if (searchText.length == 0 || compareWith.indexOf(searchText) > -1) {
+
+                        found = true;
+
+                        total++;
+
+                    }
+
+                }
+
+                if (found) {
+
+                    tableReg.rows[i].style.display = '';
+
+                } else {
+
+                    // si no ha encontrado ninguna coincidencia, esconde la
+
+                    // fila de la tabla
+
+                    tableReg.rows[i].style.display = 'none';
+
+                }
+
+            }
+
+
+
+            // mostramos las coincidencias
+
+            const lastTR=tableReg.rows[tableReg.rows.length-1];
+
+            const td=lastTR.querySelector("td");
+
+            lastTR.classList.remove("hide", "red");
+
+            if (searchText == "") {
+
+                lastTR.classList.add("hide");
+
+            } else if (total) {
+
+                td.innerHTML="Se ha encontrado "+total+" coincidencia"+((total>1)?"s":"");
+
+            } else {
+
+                lastTR.classList.add("red");
+
+                td.innerHTML="No se han encontrado coincidencias";
+
+            }
+
+        }
+</script>
+  <div class="container" >
+
+
+    <div class="masthead" >
+       <form>
+
+        <input id="searchTerm" type="text" onkeyup="doSearch()" />
+
+    </form>
+      {% if user.rol == 'Administrador' %}
+
+        <h4 style="margin: 0; color: gray; margin-bottom: 30px;">Listado de empleados</h4>
+      {% else %}
+        <h4 style="margin: 0; color: gray; margin-bottom: 30px;">Listado de empleados</h4>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+ <div >
+        <table id="datos" class="styled-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Cargo</th>
+            <th>Empresa</th>
+              <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for emple in empleados %}
+          <tr>
+            <th scope=row>{{emple.documento}}</th>
+            <td>{{emple.nombres}}</td>
+            <td>{{emple.apellidos}}</td>
+            <td>{{emple.cargo}}</td>
+            <td><i class="bi bi-eye"><a href="{% url 'mapaEmp' emple.empresa.nombre %}" style="text-decoration: none; color: secondary;">{{emple.empresa.nombre}}</a></i>
+                </td>
+              <td>
+          {% if user.rol == 'Administrador' %}
+
+                <i class="bi bi-pencil"><a href="{% url 'editarEmp' emple.empresa.nombre emple.documento %}" style="text-decoration: none; color: primary;">Editar</a></i><br>
+                <i class="bi bi-eye"><a href="{% url 'estadoEmp' emple.empresa.nombre emple.documento%}" style="text-decoration: none; color: secondary;">Cambiar estado</a></i>
+                <i class="bi bi-eye"><a href="{% url 'verEmp' emple.empresa.nombre emple.documento%}" style="text-decoration: none; color: secondary;">Cambiar estado</a></i>
+                {% else %}
+                  <i class="bi bi-eye"><a href="{% url 'verEmp' emple.empresa.nombre emple.documento%}" style="text-decoration: none; color: secondary;">Cambiar estado</a></i>
+
+              {% endif %}
+              </td>
+          </tr>
+{% endfor %}
+        <tr class='noSearch hide'>
+
+                <td colspan="5"></td>
+
+            </tr>
+      </tbody>
+      </table>
+    </div>
+
+  {% load static %}
+  <script type="text/javascript" src="{% static 'javascript/sidebar.js' %}"></script>

@@ -13,6 +13,7 @@
 
                 <form method="POST">
 							{% csrf_token %}
+                            <!--
                             <div class="form-group">
                                 <label>Seleccione la empresa</label>
                                 <select name="empresa" id="empresa" class="form-control">
@@ -23,6 +24,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                            -->
 							{{form.as_p}}
                             <div class="form-group">
                               <label>Ubicación de la empresa</label>

@@ -34,6 +34,9 @@ from cloudinary import uploader
 from cloudinary import CloudinaryResource
 import cloudinary.utils
 
+from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+
 mydataJ = []
 
 
@@ -170,32 +173,31 @@ def crearEmpresa(request):
 '''se utiliza para crear una nueva sede de una empresa. Al igual que en la función anterior,
  se obtienen todas las ciudades disponibles de la base de datos y todas las empresas existentes.
  Si la solicitud del usuario es un método POST, se valida la información ingresada por el usuario utilizando un formulario. '''
-#
-# @user_login_required
-# def crearSede(request):
-#     ciudades = Ciudades.objects.all()
-#     empresas = Empresas.objects.all()
-#     if request.method == 'POST':
-#         details = sedeForm(request.POST)
-#         if details.is_valid():
-#             nombre = request.POST['nombre']
-#             post = details.save(commit=False)
-#             post.save()
-#             p = Sedes.objects.get(nombre=nombre)
-#             ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
-#             empresa = Empresas.objects.get(nombre=request.POST['empresa'])
-#             p.ciudad = ciudad
-#             p.empresa = empresa
-#             p.save()
-#             messages.sucess(request, "EXITOSAMENTE CREADO")
-#             return redirect('geocode_club', request.POST['nombre'])
-#         else:
-#             messages.error(request, "ERROR EN LA CREACIÓN")
-#             return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
-#     else:
-#         form = sedeForm(None)
-#         messages.error(request, "ERROR EN LA CREACIÓN")
-#         return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
+
+@user_login_required
+def crearSede(request, rest):
+    ciudades = Ciudades.objects.all()
+    empresas = Empresas.objects.all()
+    if request.method == 'POST':
+        details = sedeForm(request.POST)
+        if details.is_valid():
+            nombre = request.POST['nombre']
+            post = details.save(commit=False)
+            post.save()
+            s = Sedes.objects.get(nombre=nombre)
+            ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
+            empresa = Empresas.objects.get(nombre=rest)
+            s.ciudad = ciudad
+            s.empresa = empresa
+            s.save()
+            messages.success(request, "SEDE EXITOSAMENTE CREADA")
+            return redirect('geocode_club_sede', request.POST['nombre'])
+        else:
+            messages.error(request, "ERROR EN LA CREACIÓN")
+            return render(request, "Sedes/create.html", {'form': details, 'ciudades': ciudades, 'empresas': empresas})
+    else:
+        form = sedeForm(None)
+        return render(request, 'Sedes/create.html', {'form': form, 'ciudades': ciudades, 'empresas': empresas})
 
 
 
@@ -249,6 +251,32 @@ def editarEmpresa(request, NIT):
 
 
 
+@user_login_required
+def editarSede(request, nombre):
+    sede = get_object_or_404(Sedes, nombre=nombre)
+    ciudades = Ciudades.objects.all()
+    empresas = Empresas.objects.all()
+
+    if request.method == 'POST':
+        form = sedeForm(request.POST, instance=sede)
+        if form.is_valid():
+            post = form.save(commit=False)
+            ciudad = Ciudades.objects.get(nombre=request.POST['ciudad'])
+            # empresa = Empresas.objects.get(nombre=request.POST['empresa'])
+            post.ciudad = ciudad
+            # post.empresa = empresa
+            post.save()
+            messages.success(request, "Sede actualizada exitosamente")
+            return redirect('geocode_club_sede', sede.nombre)
+        else:
+            messages.error(request, "Error al actualizar la sede")
+            return render(request, 'Sedes/edit.html',
+                          {'form': form, 'ciudades': ciudades, 'nombre': nombre, 'empresas': empresas})
+    else:
+        form = sedeForm(instance=sede)
+    return render(request, 'Sedes/edit.html',
+                  {'form': form, 'ciudades': ciudades, 'nombre': nombre, 'empresas': empresas})
+
 '''Función que se encarga de cambiar el estado de una empresa a inactivo. Recibe una solicitud HTTP (request) y un número de identificación tributaria (NIT) como parámetros.
  Primero se busca la empresa correspondiente a NIT utilizando la función get_object_or_404 de Django. 
 Luego, se cambia el valor del estado de la empresa a False y se guarda en la base de datos. '''
@@ -261,6 +289,13 @@ def inactivarEmpresa(request, NIT):
     return redirect('geocode_club', empresa.NIT)
 
 
+
+def inactivarSede(request, nombre):
+    sede = get_object_or_404(Sedes, nombre=nombre)
+    sede.estado = False
+    sede.save()
+    messages.success(request, "LA SEDE SE INACTIVO CORRECTAMENTE")
+    return redirect('geocode_club_sede', sede.nombre)
 
 
 ''' Función que se encarga de obtener la latitud y longitud de una dirección de una empresa y guardarla en la base de datos. 
@@ -292,6 +327,28 @@ def geocode_club(request, pk):
     return render(request, 'google/empty.html', context)
 
 
+
+def geocode_club_sede(request, pk):
+    sede = Sedes.objects.get(nombre=pk)
+    # check whether we have the data in the database that we need to calculate the geocode
+    if sede.direccion:
+        # creating string of existing location data in database
+        adress_string = str(sede.direccion) + ', ' + str(sede.ciudad) + ", Valle del Cauca, Colombia"
+
+        # geocode the string
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        intermediate = json.dumps(gmaps.geocode(str(adress_string)))
+        intermediate2 = json.loads(intermediate)
+        latitude = intermediate2[0]['geometry']['location']['lat']
+        longitude = intermediate2[0]['geometry']['location']['lng']
+        # save the lat and long in our database
+        sede.latitude = latitude
+        sede.longitude = longitude
+        sede.save()
+        return redirect('map_sede')
+    else:
+        return redirect('map_sede')
+    return render(request, 'google/empty.html', context)
 
 '''Función que se encarga de renderizar la página map.html con los datos necesarios. 
 Recibe una solicitud HTTP (request) como parámetro. Primero, se obtiene el usuario que ha realizado la solicitud utilizando la función get_user de Django. 
@@ -347,29 +404,79 @@ def mydataBusqueda(request):
 
     return JsonResponse(mydataJ, safe=False)
 
+
+
+def mapa_sede(request):
+    user = get_user(request)
+    key = settings.GOOGLE_API_KEY
+    sede = Sedes.objects.all()
+    nombres = []
+    for i in sede:
+        nombres.append(i.nombre)
+    if request.method == 'POST':
+        for nombre in nombres:
+            if request.POST['search'] in nombre:
+                sed = Sedes.objects.get(nombre=nombre)
+                mydataJ.append({'nombre': sed.nombre,
+                                'latitude': sed.latitude,
+                                'longitude': sed.longitude
+                                })
+        if (len(mydataJ) == 0):
+            context = {
+                'key': key,
+                'user': user,
+                'data': True,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'zoom': 12
+            }
+        else:
+            context = {
+                'key': key,
+                'user': user,
+                'lati': 3.43722,
+                'longi': -76.5225,
+                'data': False,
+                'zoom': 12
+            }
+    else:
+        context = {
+            'key': key,
+            'user': user,
+            'data': True,
+            'lati': 3.43722,
+            'longi': -76.5225,
+            'zoom': 12
+        }
+    return render(request, 'google/map.html', context)
+
+
+
 ''' Función que se encarga de obtener los datos de todas las empresas y empleados, devolverlos en formato JSON.
  Recibe una solicitud HTTP (request) como parámetro. Primero, se obtienen los datos de todas las empresas y se almacenan en una lista.
  Luego, se devuelve la lista en formato JSON utilizando la función JsonResponse de Django.'''
 
 def mydata(request):
-    result_list = list(Empresas.objects.values('nombre',
-                                               'descripcion',
-                                               'NIT',
-                                               'mision',
-                                               'vision',
-                                               'telefono',
-                                               'fechaFundacion',
-                                               'paginaWeb',
-                                               'direccion',
-                                               'latitude',
-                                               'longitude',
-                                               'especialidades__nombre',
+
+    result_list = list(Empresas.objects.values('nombre', 'descripcion', 'NIT', 'mision', 'vision', 'telefono',
+                                               'fechaFundacion', 'paginaWeb', 'direccion', 'latitude', 'longitude',
+                                               'estado','especialidades__nombre',
                                                # Accede al campo 'nombre' de la relación especialidades
                                                'servicios__nombre',
-                                               'ciudad__nombre'
-                                               ))
+                                               'ciudad__nombre'))
 
-    return JsonResponse(result_list, safe=False)
+    result_list2 = list(Sedes.objects.values('nombre',
+                                            'telefono',
+                                            'direccion',
+                                            'latitude',
+                                            'longitude',
+                                            'estado',
+                                            'empresa__nombre',
+                                            'ciudad__nombre'
+                                            ))
+
+
+    return JsonResponse({'result_list': result_list, 'result_list2': result_list2}, safe=False)
 
 
 
@@ -608,3 +715,136 @@ def rutaEntrevista(rutaCompleta):
 def tipoContenido(nombreArchivo):
     contenido, encoding = mimetypes.guess_type(nombreArchivo)
     return contenido
+
+@user_login_required
+def servicios_especialidades(request):
+    servicios = Servicios.objects.all()
+    paginator = Paginator(servicios, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'servicios_especialidades/servicios.html', {'page_obj': page_obj})
+
+@user_login_required
+def crearServicio(request):
+    form = serviciosForm()
+    if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
+        form = serviciosForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print("Segunda salida")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("Tercera salida")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
+    return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
+
+@user_login_required
+def editarServicio(request, servicio_id):
+    servicio_id = ObjectId(servicio_id)
+
+    servicio = get_object_or_404(Servicios, _id=servicio_id)
+    if request.method == 'POST':
+        print("salida entre medio 2")
+        form = serviciosForm(request.POST, instance=servicio)
+        if form.is_valid():
+            form.save()
+            print("salida 2")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("salida 3")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
+    form = serviciosForm(instance=servicio)
+    return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
+
+@csrf_exempt
+def eliminarServicio(request, servicio_id):
+    servicio_id = ObjectId(servicio_id)
+    servicio = get_object_or_404(Servicios, _id=servicio_id)
+    if request.method == 'POST':
+        servicio.delete()
+        return JsonResponse({'success': True, 'message': 'Servicio eliminado exitosamente.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+def especialidades(request):
+    especialidades = Especialidades.objects.all()
+    paginator = Paginator(especialidades, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'servicios_especialidades/especialidades.html', {'page_obj': page_obj})
+
+@user_login_required
+def crearEspecialidad(request):
+    form = especialidadesForm()
+    if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
+        form = especialidadesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print("Segunda salida")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("Tercera salida")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
+    return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
+
+@user_login_required
+def editarEspecialidad(request, servicio_id):
+    especialidad_id = ObjectId(servicio_id)
+
+    especialidad = get_object_or_404(Especialidades, _id=especialidad_id)
+    if request.method == 'POST':
+        print("salida entre medio 2")
+        form = especialidadesForm(request.POST, instance=especialidad)
+        if form.is_valid():
+            form.save()
+            print("salida 2")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("salida 3")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
+    form = especialidadesForm(instance=especialidad)
+    return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
+
+@csrf_exempt
+def eliminarEspecialidad(request, servicio_id):
+    especialidad_id = ObjectId(servicio_id)
+    especialidad = get_object_or_404(Especialidades, _id=especialidad_id)
+    if request.method == 'POST':
+        especialidad.delete()
+        return JsonResponse({'success': True, 'message': 'Servicio eliminado exitosamente.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+@user_login_required
+def mapaEmp(request, rest):
+    user = get_user(request)
+    key = settings.GOOGLE_API_KEY
+    emp = Empresas.objects.get(nombre=rest)
+    context = {
+        'key': key,
+        'user': user,
+        'data': True,
+        'lati': emp.latitude,
+        'longi': emp.longitude,
+        'zoom': 15
+    }
+    return render(request, 'google/map.html', context)
+
+
+@user_login_required
+def vistaListaEmplTodos(request):
+    empleados = Empleados.objects.all()
+    user = get_user(request)
+    context = {
+            'empleados': empleados,
+            'user': user,
+    }
+    return render(request, "Empleados/listaEmpleados.html", context=context)

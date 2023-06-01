@@ -1,0 +1,37 @@
+{% extends 'google/base.html' %}
+{% block content %}
+{% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estiloEditar.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/fontello.css' %}">
+
+<div class="container col-md-7" style="padding-top: 20px; padding-bottom: 20px;">
+    <div style="display:flex; flex-direction:column; align-items:center;">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <a class="icon-cancel"  title="Cerrar" id="sidebar-close" href="{% url 'map' %}"></a>
+                    <h2>Editar Sede</h2>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="form-group">
+                        <label>Ubicación de la sede</label>
+                        <select name="ciudad" id="ciudad" class="form-control">
+                            {% for ciudad in ciudades %}
+                            <option value="{{ ciudad.nombre }}" {% if sede.ciudad.nombre == ciudad.nombre %} selected {% endif %}>{{ ciudad.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn">
+                        Guardar Cambios
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% load static %}
+<script type="text/javascript" src="{% static 'javascript/sidebar.js' %}"></script>
+{% endblock %}
