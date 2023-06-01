@@ -1,0 +1,320 @@
+{% extends 'google/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.4/font/bootstrap-icons.css">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+
+
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-bs-theme="light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'map' %}">GEOSOFT</a>
+
+
+      <span class="navbar-text text-white d-flex align-items-center">Bienvenido Administrador</span>
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <button type="button" class="btn btn-outline-primary me-2">
+            <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'vistaListaEmplTodos' %}">
+              Buscar empleado
+            </a>
+          </button>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-primary text-decoration-none text-white dropdown-toggle" type="button" id="gestionDropdown"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Gestión
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="gestionDropdown">
+          <a class="dropdown-item" href="{% url 'servicios_especialidades' %}">Gestión de Servicios</a>
+          <a class="dropdown-item" href="{% url 'especialidades' %}">Gestión de Especialidades</a>
+        </div>
+      </div>
+
+        <form class="d-flex position-relative ms-auto me-3">
+
+          <button type="button" class="btn btn-outline-primary me-2">
+            <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'crearEmpresa'%}">
+              Crear Empresa
+            </a>
+          </button>
+          <a class="navbar-text text-white d-flex align-items-center" href="{% url 'logout' %}">
+            Salir
+            <i class="bi bi-arrow-bar-left ms-1"></i>
+          </a>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+<div class="container espacio mt-5">
+
+            <div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>Gestión de<b> Especialidades</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#"  id="btn-agregar-servicio" class="btn btn-success rounded"  data-toggle="modal" data-bs-target="#crearServicioModal"><span>Agregar </span></a>
+
+					</div>
+				</div>
+			</div>
+            <div class="table-responsive" id="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for servicio in page_obj %}
+            <tr>
+                <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
+                <td>{{ servicio.nombre }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Acciones">
+                        <a href="#" class="btn btn-primary btn-editar" data-id="{{ servicio.pk }}">Editar</a>
+                        <a href="#" class="btn btn-danger btn-eliminar" data-id="{{ servicio.pk }}">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix">
+    <div class="hint-text"> Mostrando <b>{{ page_obj.start_index }}</b> - <b>{{ page_obj.end_index }}</b> de <b>{{ page_obj.paginator.count }}</b>  entradas</div>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a href="?page=1" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;</span></a></li>
+            <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous"><span aria-hidden="true">&lsaquo;</span></a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-hidden="true">&laquo;</span></li>
+            <li class="page-item disabled"><span class="page-link" aria-hidden="true">&lsaquo;</span></li>
+        {% endif %}
+
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next"><span aria-hidden="true">&rsaquo;</span></a></li>
+            <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;</span></a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-hidden="true">&rsaquo;</span></li>
+            <li class="page-item disabled"><span class="page-link" aria-hidden="true">&raquo;</span></li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
+    <!-- Modal para editar servicio -->
+<div class="modal fade" id="editarServicioModal" tabindex="-1" aria-labelledby="editarServicioModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarServicioModalLabel">Editar Especialidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear servicio -->
+<div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearServicioModalLabel">Crear Especialidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmarEliminarModal" tabindex="-1" aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmarEliminarModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar esta especialidad?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-confirmar-eliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    var servicioId;
+  // Manejar la acción de cargar el formulario en el modal
+  $('#btn-agregar-servicio').click(function() {
+    $.ajax({
+      url: '/crear-especialidades/',
+      type: 'GET',
+      dataType: 'html',
+      success: function(response) {
+        $('#crearServicioModal .modal-body').html(response);
+        $('#crearServicioModal').modal('show');
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+      }
+    });
+  });
+
+  // Manejar la acción de enviar el formulario
+  $(document).on('submit', '#crearServicioForm', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var method = form.attr('method');
+    var formData = form.serialize();
+
+    $.ajax({
+      url: /crear-especialidades/,
+      type: method,
+      dataType: 'json',
+      data: formData,
+      success: function(response) {
+        if (response.success) {
+          // El servicio se creó exitosamente
+          $('#crearServicioModal').modal('hide');
+          window.location.href = '/especialidades/';
+        } else {
+          // Hubo errores al crear el servicio
+          var errors = response.errors;
+          // Mostrar los errores en la interfaz de usuario, por ejemplo, mediante mensajes de error
+          console.error(errors);
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+      }
+    });
+  });
+
+    $(document).on('click', '.btn-editar', function(e) {
+      e.preventDefault();
+
+      servicioId = $(this).data('id');
+      $('#servicioIdInput').val(servicioId);
+      $.ajax({
+        url: '/editar-especialidad/' + servicioId,
+        type: 'GET',
+        dataType: 'html',
+        success: function(response) {
+          $('#editarServicioModal .modal-body').html(response);
+          $('#editarServicioModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+
+    // Manejar la acción de enviar el formulario de edición
+    $(document).on('submit', '#editarServicioForm', function(e) {
+      e.preventDefault();
+
+      var form = $(this);
+      var method = form.attr('method');
+      var formData = form.serialize();
+
+      $.ajax({
+        url: '/editar-especialidad/' + servicioId,
+        type: method,
+        dataType: 'json',
+        data: formData,
+        success: function(response) {
+          if (response.success) {
+            // El servicio se editó exitosamente
+            $('#editarServicioModal').modal('hide');
+            window.location.href = '/especialidades/';
+          } else {
+            // Hubo errores al editar el servicio
+            var errors = response.errors;
+            // Mostrar los errores en la interfaz de usuario, por ejemplo, mediante mensajes de error
+            console.error(errors);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+
+
+  $(document).on('click', '.btn-eliminar', function(e) {
+    e.preventDefault();
+
+    var servicioId = $(this).data('id');
+
+    // Mostrar ventana modal de confirmación
+    $('#confirmarEliminarModal').modal('show');
+
+    // Manejar el clic en el botón de confirmar eliminación
+    $('#confirmarEliminarModal').on('click', '#btn-confirmar-eliminar', function(e) {
+      e.preventDefault();
+
+      // Realizar la eliminación del servicio mediante AJAX
+      $.ajax({
+        url: '/eliminar-especialidad/' + servicioId ,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            // El servicio se eliminó exitosamente
+            // Realizar cualquier acción necesaria, como actualizar la lista de servicios
+            window.location.href = '/especialidades/';
+          } else {
+            // Hubo un error al eliminar el servicio
+            var message = response.message;
+            console.error(message);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+
+      // Cerrar la ventana modal de confirmación
+      $('#confirmarEliminarModal').modal('hide');
+    });
+  });
+
+});
+</script>
+
+
+{% endblock %}

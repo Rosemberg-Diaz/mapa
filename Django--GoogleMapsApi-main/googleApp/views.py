@@ -34,6 +34,9 @@ from cloudinary import uploader
 from cloudinary import CloudinaryResource
 import cloudinary.utils
 
+from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+
 mydataJ = []
 
 
@@ -457,14 +460,19 @@ def mydata(request):
 
     result_list = list(Empresas.objects.values('nombre', 'descripcion', 'NIT', 'mision', 'vision', 'telefono',
                                                'fechaFundacion', 'paginaWeb', 'direccion', 'latitude', 'longitude',
-                                               'estado'))
+                                               'estado','especialidades__nombre',
+                                               # Accede al campo 'nombre' de la relación especialidades
+                                               'servicios__nombre',
+                                               'ciudad__nombre'))
 
     result_list2 = list(Sedes.objects.values('nombre',
                                             'telefono',
                                             'direccion',
                                             'latitude',
                                             'longitude',
-                                            'estado'
+                                            'estado',
+                                            'empresa__nombre',
+                                            'ciudad__nombre'
                                             ))
 
 
@@ -707,3 +715,136 @@ def rutaEntrevista(rutaCompleta):
 def tipoContenido(nombreArchivo):
     contenido, encoding = mimetypes.guess_type(nombreArchivo)
     return contenido
+
+@user_login_required
+def servicios_especialidades(request):
+    servicios = Servicios.objects.all()
+    paginator = Paginator(servicios, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'servicios_especialidades/servicios.html', {'page_obj': page_obj})
+
+@user_login_required
+def crearServicio(request):
+    form = serviciosForm()
+    if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
+        form = serviciosForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print("Segunda salida")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("Tercera salida")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
+    return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
+
+@user_login_required
+def editarServicio(request, servicio_id):
+    servicio_id = ObjectId(servicio_id)
+
+    servicio = get_object_or_404(Servicios, _id=servicio_id)
+    if request.method == 'POST':
+        print("salida entre medio 2")
+        form = serviciosForm(request.POST, instance=servicio)
+        if form.is_valid():
+            form.save()
+            print("salida 2")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("salida 3")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
+    form = serviciosForm(instance=servicio)
+    return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
+
+@csrf_exempt
+def eliminarServicio(request, servicio_id):
+    servicio_id = ObjectId(servicio_id)
+    servicio = get_object_or_404(Servicios, _id=servicio_id)
+    if request.method == 'POST':
+        servicio.delete()
+        return JsonResponse({'success': True, 'message': 'Servicio eliminado exitosamente.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+def especialidades(request):
+    especialidades = Especialidades.objects.all()
+    paginator = Paginator(especialidades, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'servicios_especialidades/especialidades.html', {'page_obj': page_obj})
+
+@user_login_required
+def crearEspecialidad(request):
+    form = especialidadesForm()
+    if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
+        form = especialidadesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print("Segunda salida")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("Tercera salida")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
+    return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
+
+@user_login_required
+def editarEspecialidad(request, servicio_id):
+    especialidad_id = ObjectId(servicio_id)
+
+    especialidad = get_object_or_404(Especialidades, _id=especialidad_id)
+    if request.method == 'POST':
+        print("salida entre medio 2")
+        form = especialidadesForm(request.POST, instance=especialidad)
+        if form.is_valid():
+            form.save()
+            print("salida 2")
+            return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
+        else:
+            print("salida 3")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
+    form = especialidadesForm(instance=especialidad)
+    return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
+
+@csrf_exempt
+def eliminarEspecialidad(request, servicio_id):
+    especialidad_id = ObjectId(servicio_id)
+    especialidad = get_object_or_404(Especialidades, _id=especialidad_id)
+    if request.method == 'POST':
+        especialidad.delete()
+        return JsonResponse({'success': True, 'message': 'Servicio eliminado exitosamente.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+@user_login_required
+def mapaEmp(request, rest):
+    user = get_user(request)
+    key = settings.GOOGLE_API_KEY
+    emp = Empresas.objects.get(nombre=rest)
+    context = {
+        'key': key,
+        'user': user,
+        'data': True,
+        'lati': emp.latitude,
+        'longi': emp.longitude,
+        'zoom': 15
+    }
+    return render(request, 'google/map.html', context)
+
+
+@user_login_required
+def vistaListaEmplTodos(request):
+    empleados = Empleados.objects.all()
+    user = get_user(request)
+    context = {
+            'empleados': empleados,
+            'user': user,
+    }
+    return render(request, "Empleados/listaEmpleados.html", context=context)

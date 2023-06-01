@@ -77,6 +77,32 @@ class empresaForm(forms.ModelForm):
         }
 
 
+class serviciosForm(forms.ModelForm):
+    class Meta:
+        model = Servicios
+        fields = ['nombre']
+        widgets = {
+            'nombre': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+        }
+
+class especialidadesForm(forms.ModelForm):
+    class Meta:
+        model = Especialidades
+        fields = ['nombre']
+        widgets = {
+            'nombre': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+        }
+
+
+
 class sedeForm(forms.ModelForm):
     class Meta:
         model = Sedes

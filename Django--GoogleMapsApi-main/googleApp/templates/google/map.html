@@ -66,7 +66,7 @@
       });
 
       document.getElementById('continueButton').addEventListener('click', function() {
-        window.location.href = 'inactivarEmpresa/'+markerData.NIT;
+        window.location.href = '/inactivarEmpresa/'+markerData.NIT;
         document.getElementById('confirmationModal').style.display = 'none';
       });
 
@@ -130,16 +130,16 @@
     function updateSidebarContentSede(markerData) {
     document.getElementById('inactivarSede').addEventListener('click', function (event) {
       event.preventDefault();
-      document.getElementById('confirmationModal').style.display = 'flex';
+      document.getElementById('confirmationModal2').style.display = 'flex';
     });
 
-    document.getElementById('continueButton').addEventListener('click', function () {
-      window.location.href = 'inactivarSede/' + markerData.nombre;
-      document.getElementById('confirmationModal').style.display = 'none';
+    document.getElementById('continueButton2').addEventListener('click', function () {
+      window.location.href = '/inactivarSede/' + markerData.nombre;
+      document.getElementById('confirmationModal2').style.display = 'none';
     });
 
-    document.getElementById('cancelButton').addEventListener('click', function () {
-      document.getElementById('confirmationModal').style.display = 'none';
+    document.getElementById('cancelButton2').addEventListener('click', function () {
+      document.getElementById('confirmationModal2').style.display = 'none';
     });
 
 
@@ -154,12 +154,12 @@
     });
 
     $("#sidebarSede-title").text(markerData.nombre);
-    $("#sidebarSede-empresa").html('<strong>EMPRESA:</strong> ' + markerData.empresa);
+    $("#sidebarSede-empresa").html('<strong>EMPRESA:</strong> ' + markerData.empresa__nombre);
     $("#sidebarSede-telefono").html('<strong>TELEFONO:</strong> ' + markerData.telefono);
     $("#sidebarSede-direccion").html('<strong>DIRECCIÓN:</strong> ' + markerData.direccion);
-    $("#sidebarSede-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+    $("#sidebarSede-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad__nombre);
     $(document).ready(function () {
-      $("#close-sidebar").click(function () {
+      $("#close-sidebar2").click(function () {
         $("#sidebarSede").hide();
       });
     });
@@ -241,7 +241,7 @@ $(document).ready(function () {
       });
 
       document.getElementById('continueButton').addEventListener('click', function() {
-        window.location.href = 'inactivarEmpresa/'+markerData.NIT;
+        window.location.href = '/inactivarEmpresa/'+markerData.NIT;
         document.getElementById('confirmationModal').style.display = 'none';
       });
 
@@ -285,16 +285,16 @@ $(document).ready(function () {
   function updateSidebarContentSede(markerData) {
     document.getElementById('inactivarSede').addEventListener('click', function (event) {
       event.preventDefault();
-      document.getElementById('confirmationModal').style.display = 'flex';
+      document.getElementById('confirmationModal2').style.display = 'flex';
     });
 
-    document.getElementById('continueButton').addEventListener('click', function () {
-      window.location.href = 'inactivarSede/' + markerData.nombre;
-      document.getElementById('confirmationModal').style.display = 'none';
+    document.getElementById('continueButton2').addEventListener('click', function () {
+      window.location.href = '/inactivarSede/' + markerData.nombre;
+      document.getElementById('confirmationModal2').style.display = 'none';
     });
 
-    document.getElementById('cancelButton').addEventListener('click', function () {
-      document.getElementById('confirmationModal').style.display = 'none';
+    document.getElementById('cancelButton2').addEventListener('click', function () {
+      document.getElementById('confirmationModal2').style.display = 'none';
     });
 
 
@@ -312,9 +312,9 @@ $(document).ready(function () {
     $("#sidebarSede-empresa").html('<strong>EMPRESA:</strong> ' + markerData.empresa);
     $("#sidebarSede-telefono").html('<strong>TELEFONO:</strong> ' + markerData.telefono);
     $("#sidebarSede-direccion").html('<strong>DIRECCIÓN:</strong> ' + markerData.direccion);
-    $("#sidebarSede-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad);
+    $("#sidebarSede-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad__nombre);
     $(document).ready(function () {
-      $("#close-sidebar").click(function () {
+      $("#close-sidebar2").click(function () {
         $("#sidebarSede").hide();
       });
     });
@@ -362,6 +362,23 @@ $(document).ready(function () {
         <button class="btn btn-outline-light me-2 " style="background: transparent; border: none; margin-left: auto;" onClick="expandSearch()">
           <i class="fas fa-search" style="font-size: 1.2em; color: #ffffff;"></i>
         </button>
+      </div>
+
+      <button type="button" class="btn btn-outline-primary me-2">
+            <a class="btn btn-outline-info text-decoration-none text-white" id="btn-crear" href="{% url 'vistaListaEmplTodos' %}">
+              Buscar empleado
+            </a>
+          </button>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-primary text-decoration-none text-white dropdown-toggle" type="button" id="gestionDropdown"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Gestión
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="gestionDropdown">
+          <a class="dropdown-item" href="{% url 'servicios_especialidades' %}">Gestión de Servicios</a>
+          <a class="dropdown-item" href="{% url 'especialidades' %}">Gestión de Especialidades</a>
+        </div>
       </div>
 
         {% if user.rol == 'Administrador' %}
@@ -459,7 +476,7 @@ $(document).ready(function () {
         <div class="card-body">
           <h3 style="padding-top:2%" id="sidebarSede-title">Aquí poner sedes</h3>
           <div class="info-container">
-            <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar"></button>
+            <button class="icon-cancel" style="color: #00a6ff;" title="Cerrar" id="close-sidebar2"></button>
             {% if user.rol == 'Administrador' %}
             <button class="icon-pencil" style="color:orange" id="editarSede" title="Editar"></button>
             <button type="button" class="icon-block" style="color:red" id="inactivarSede" title="Borrar"></button>
@@ -468,18 +485,18 @@ $(document).ready(function () {
             <button type="button" class="icon-block" id="inactivarSede" title="Borrar" style="display:none;"></button>
 
             {% endif %}
-            <div id="confirmationModal"
+            <div id="confirmationModal2"
               style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
               <div
                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: inline-block;">
                 <p style="color: black; font-size: 16px; text-align: center;">Estas a punto de inactivar
                   una sede. ¿Deseas continuar?</p>
                 <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-                  <button type="button" id="continueButton"
+                  <button type="button" id="continueButton2"
                     style="background-color: red; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
                     Continuar
                   </button>
-                  <button type="button" id="cancelButton"
+                  <button type="button" id="cancelButton2"
                     style="background-color: lightblue; color: white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
                     Cancelar
                   </button>
@@ -493,10 +510,10 @@ $(document).ready(function () {
               <ul>
                 <li id="sidebarSede-telefono"></li>
                 <li id="sidebarSede-direccion"></li>
-                <!--
+
                 <li id="sidebarSede-ciudad"></li>
                 <li id="sidebarSede-empresa"></li>
-                -->
+
               </ul>
             </div>
 
