@@ -269,8 +269,14 @@ $(document).ready(function () {
       $("#sidebar-fecha").html('<strong>FECHA DE FUNDACIÓN:</strong> ' + markerData.fechaFundacion);
       $("#sidebar-email").html('<strong>EMAIL:</strong> ' + markerData.email);
       $("#sidebar-ciudad").html('<strong>CIUDAD:</strong> ' + markerData.ciudad__nombre);
-      $("#sidebar-especialidades").html('<strong>ESPECIALIDADES:</strong> ' + markerData.especialidades__nombre);
-      $("#sidebar-servicios").html('<strong>SERVICIOS:</strong> ' + markerData.servicios__nombre);
+      var serviciosHTML = '<strong>SERVICIOS:</strong> ';
+      serviciosHTML += markerData.servicios__nombre.join(', ');
+      $("#sidebar-servicios").html(serviciosHTML);
+
+      var especialidadesHTML = '<strong>ESPECIALIDADES:</strong> ';
+      especialidadesHTML += markerData.especialidades__nombre.join(', ');
+      $("#sidebar-especialidades").html(especialidadesHTML);
+
       $(document).ready(function () {
         $("#close-sidebar").click(function () {
           $("#sidebar").hide();
@@ -371,7 +377,7 @@ $(document).ready(function () {
           </button>
 
       <div class="dropdown">
-        <button class="btn btn-outline-primary text-decoration-none text-white dropdown-toggle" type="button" id="gestionDropdown"
+        <button class="btn btn-outline-primary  text-white dropdown-toggle" type="button" id="gestionDropdown"
           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Gestión
         </button>

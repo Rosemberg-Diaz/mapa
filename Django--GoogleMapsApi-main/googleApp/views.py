@@ -9,26 +9,35 @@ from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.core import serializers
 from django.contrib import messages
+
+
 import requests
 import json
 import urllib
+
 import base64
 from django.contrib.auth import logout, login as auth_login
 from googleApp.backends import CustomAuthBackend
 from .decorators import user_login_required
+
 from bson import ObjectId
-from google.cloud import storage
+#Importaciones para cloud storage
 from django.conf import settings
 import os
 from urllib.parse import urlparse
 import mimetypes
+
+#cloudinary
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from cloudinary import uploader
 from cloudinary import CloudinaryResource
 import cloudinary.utils
+
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
+
 mydataJ = []
+
 
 ''' Esta vista maneja la solicitud de registro de un nuevo usuario. Si la petición es una solicitud POST,
  se recogen los datos del formulario y se crea un nuevo usuario con la función create_user del modelo Usuarios.'''
@@ -84,7 +93,7 @@ def vistaBase(request):
 @user_login_required
 def logout_view(request):
     if 'user_id' in request.session:
-        del request.session['user_id']  
+        del request.session['user_id']  # delete user session
     return redirect('inicio')
 
 
@@ -240,10 +249,7 @@ def editarEmpresa(request, NIT):
         return render(request, 'Empresas/edit.html', {'form': form, 'ciudades': ciudades, 'nit': NIT, 'empresa':empresa, 'especialidades': especialidades, 'servicios': servicios})
 
 
-''' esta función se encarga de editar una sede de una empresa a través de un formulario.
- Permite al usuario actualizar los datos de la sede, como la ciudad y la empresa asociada. Después de la edición, 
- redirige a la vista que muestra la geolocalización de la sede
- y muestra un mensaje de éxito o error según el resultado de la edición.'''
+
 @user_login_required
 def editarSede(request, nombre):
     sede = get_object_or_404(Sedes, nombre=nombre)
@@ -282,10 +288,7 @@ def inactivarEmpresa(request, NIT):
     return redirect('geocode_club', empresa.NIT)
 
 
-'''Esta función se encarga de inactivar una sede del club cambiando su estado a inactivo y 
-luego redirige a la vista que muestra la geolocalización de la sede. Además,
- muestra un mensaje de éxito para informar al usuario que la sede se ha inactivado correctamente.'''
- 
+
 def inactivarSede(request, nombre):
     sede = get_object_or_404(Sedes, nombre=nombre)
     sede.estado = False
@@ -302,13 +305,18 @@ Recibe una solicitud HTTP (request) y un número de identificación tributaria (
 
 def geocode_club(request, pk):
     empresa = Empresas.objects.get(NIT=pk)
+    # check whether we have the data in the database that we need to calculate the geocode
     if empresa.direccion:
+        # creating string of existing location data in database
         adress_string = str(empresa.direccion) + ', ' + str(empresa.ciudad) + ", Valle del Cauca, Colombia"
+
+        # geocode the string
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         intermediate = json.dumps(gmaps.geocode(str(adress_string)))
         intermediate2 = json.loads(intermediate)
         latitude = intermediate2[0]['geometry']['location']['lat']
         longitude = intermediate2[0]['geometry']['location']['lng']
+        # save the lat and long in our database
         empresa.latitude = latitude
         empresa.longitude = longitude
         empresa.save()
@@ -318,18 +326,21 @@ def geocode_club(request, pk):
     return render(request, 'google/empty.html', context)
 
 
-'''En resumen, esta función se encarga de geocodificar la dirección de una sede de club utilizando la API de Google Maps
- y guardar la latitud y longitud correspondientes en el objeto de la sede.
- Luego redirige a la vista del mapa de la sede.'''
+
 def geocode_club_sede(request, pk):
     sede = Sedes.objects.get(nombre=pk)
+    # check whether we have the data in the database that we need to calculate the geocode
     if sede.direccion:
+        # creating string of existing location data in database
         adress_string = str(sede.direccion) + ', ' + str(sede.ciudad) + ", Valle del Cauca, Colombia"
+
+        # geocode the string
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         intermediate = json.dumps(gmaps.geocode(str(adress_string)))
         intermediate2 = json.loads(intermediate)
         latitude = intermediate2[0]['geometry']['location']['lat']
         longitude = intermediate2[0]['geometry']['location']['lng']
+        # save the lat and long in our database
         sede.latitude = latitude
         sede.longitude = longitude
         sede.save()
@@ -346,15 +357,29 @@ Luego, se crea un diccionario que contiene la clave key con el valor de la clave
 def mapa(request):
     user = get_user(request)
     key = settings.GOOGLE_API_KEY
-    empres =  Empresas.objects.all()
+    empres = Empresas.objects.all()
     nombres= []
     for i in empres:
         nombres.append(i.nombre)
     if request.method == 'POST':
         for nombre in nombres:
             if request.POST['search'] in nombre:
+                mydataJ.clear()
                 emp = Empresas.objects.get(nombre=nombre)
                 mydataJ.append({'nombre': emp.nombre,
+                                'NIT': emp.NIT,
+                                'mision': emp.mision,
+                                'vision': emp.vision,
+                                'descripcion': emp.descripcion,
+                                'telefono': emp.telefono,
+                                'paginaWeb': emp.paginaWeb,
+                                'fechaFundacion': emp.fechaFundacion,
+                                'direccion': emp.direccion,
+
+                                'ciudad__nombre': emp.ciudad.nombre,
+                                'servicios__nombre': [servicio.nombre for servicio in emp.servicios.all()],
+                                'especialidades__nombre': [especialidad.nombre for especialidad in emp.especialidades.all()],
+
                          'latitude': emp.latitude,
                         'longitude': emp.longitude
                 })
@@ -393,8 +418,7 @@ def mydataBusqueda(request):
     return JsonResponse(mydataJ, safe=False)
 
 
-'''La función recupera sedes de la base de datos, permite buscar sedes por su nombre 
-y muestra un mapa con las sedes encontradas o una ubicación predeterminada si no se encuentra ninguna sede.'''
+
 def mapa_sede(request):
     user = get_user(request)
     key = settings.GOOGLE_API_KEY
@@ -450,7 +474,7 @@ def mydata(request):
     result_list = list(Empresas.objects.values('nombre', 'descripcion', 'NIT', 'mision', 'vision', 'telefono',
                                                'fechaFundacion', 'paginaWeb', 'direccion', 'latitude', 'longitude',
                                                'estado','especialidades__nombre',
-                                             
+                                               # Accede al campo 'nombre' de la relación especialidades
                                                'servicios__nombre',
                                                'ciudad__nombre'))
 
@@ -469,11 +493,9 @@ def mydata(request):
 
 
 
-'''Esta función recibe el NIT de una empresa a través de una solicitud GET, busca la empresa correspondiente en la base de datos y
- devuelve una respuesta JSON que contiene los servicios y las especialidades asociadas a esa empresa.'''
 
 def obtener_Ser_Esp(request):
-    nit = request.GET.get('nit', '')  
+    nit = request.GET.get('nit', '')  # Obtén el NIT de la empresa desde la solicitud GET
     empresa = Empresas.objects.get(NIT=nit)
     servicios = empresa.servicios.values('nombre').distinct()
     especialidades = empresa.especialidades.values('nombre').distinct()
@@ -525,9 +547,10 @@ def vistaListaEmpl(request, rest):
 
 
 '''esta función toma un archivo como entrada, lo lee y lo codifica en Base64. Luego devuelve la cadena codificada en Base64.'''
-
 def encode_file(file):
+    # Lee los datos del archivo
     data = file.read()
+    # Codifica los datos en Base64
     encoded_data = base64.b64encode(data)
     encoded_string = encoded_data.decode('utf-8')
     return (encoded_string)
@@ -539,10 +562,19 @@ def encode_file(file):
 @user_login_required
 def vistaCrearEmpl(request, rest):
     if request.method == 'POST':
+
+        # Pass the form data to the form class
         details = empleadoForm(request.POST, request.FILES)
+        # In the 'form' class the clean function
+        # is defined, if all the data is correct
+        # as per the clean function, it returns true
         if details.is_valid():
+            # Temporarily make an object to be add some
+            # logic into the data if there is such a need
+            # before writing to the database
             post = details.save(commit=False)
             imagen = encode_file(request.FILES['uploadFromPC'])
+            # Finally write the changes into database
             post.save()
             p = Empleados.objects.get(documento=request.POST['documento'])
             emp = Empresas.objects.get(nombre=rest)
@@ -553,13 +585,24 @@ def vistaCrearEmpl(request, rest):
                 uploaded_video = uploader.upload_large(archivo, resource_type='video', chunk_size=6000000)
                 p.videoEntrevista = uploaded_video['url']
                 p.entrevista = 's'
+
             p.save()
+            # redirect it to some another page indicating data
+            # was inserted successfully
             messages.success(request, "EMPLEADO EXITOSAMENTE CREADO")
             return redirect('map')
+
         else:
+
+            # Redirect back to the same page if the data
+            # was invalid
             messages.error(request, "ERROR EN LA CREACIÓN")
             return render(request, "Empleados/crearEmp.html", {'form': details})
     else:
+
+        # If the request is a GET request then,
+        # create an empty form object and
+        # render it into the page
         form = empleadoForm(None)
         return render(request, 'Empleados/crearEmp.html', {'form': form})
 
@@ -573,8 +616,11 @@ def vistaEditarEmpl(request, rest, ced):
     p = Empleados.objects.get(documento=ced)
     archivo_actual = p.videoEntrevista
     pathEntrevista = p.videoEntrevista if archivo_actual != '' else None
+    print(p)
     if request.method == "POST":
+        print("Entro 1")
         form = empleadoForm(request.POST, request.FILES, instance=p)
+        print(request.POST['nombres'])
 
         if form.is_valid():
             p.nombres = request.POST['nombres']
@@ -588,29 +634,39 @@ def vistaEditarEmpl(request, rest, ced):
             p.experienciaCargo = request.POST['experienciaCargo']
             if 'video' in request.FILES:
                 archivo_nuevo = request.FILES['video']
+                print(archivo_nuevo)
             else:
                 archivo_nuevo = None
 
             if request.POST['uploadFromPC'] != '':
                 imagen = encode_file(request.FILES['uploadFromPC'])
                 p.imagen = imagen
+            # Calcular el límite de tamaño en megabytes
             limite_bytes = 104857600
             limite_mb = limite_bytes / (1024 * 1024)
 
             if archivo_nuevo.size > limite_bytes:
+                print("SE DEVUELVE")
                 messages.error(request, "El archivo es demasiado grande. El límite es de 100 MB.")
                 return render(request, 'Empleados/editarEmp.html', {'form': form, 'emp': p,'path':pathEntrevista})
             else:
                 if archivo_nuevo:
+                    print(archivo_nuevo.name)
                     mime_type = tipoContenido(archivo_nuevo.name)
+                    print("SACA EL CONTENIDO PUÑETA")
                     type, mime = mime_type.split("/")
+                    print(type)
                     uploaded_video = uploader.upload_large(archivo_nuevo, resource_type='video',  chunk_size=6000000)
                     p.videoEntrevista = uploaded_video['url']
+
                     if archivo_actual:
+
+                        # Eliminar el video existente de Cloudinary
                         public_id = rutaEntrevista(archivo_actual)
                         id, extension = public_id.split(".")
                         mime_type = tipoContenido(archivo_actual)
                         type, mime = mime_type.split("/")
+                        print(type)
                         uploader.destroy(id,resource_type='video')
             p.save()
             messages.success(request, "EXITOSAMENTE ACTUALIZADO")
@@ -626,7 +682,6 @@ def vistaEditarEmpl(request, rest, ced):
 
 
 '''esta función muestra los detalles de un empleado existente en una página separada.'''
-
 @user_login_required
 def vistaVerEmpl(request, rest, ced):
     empleados = Empleados.objects.get(documento=ced)
@@ -639,6 +694,7 @@ def vistaVerEmpl(request, rest, ced):
             'empleado': empleados,
             'mime_type': mime_type,
         }
+        print("ENTRO")
     else:
         context = {
             'emp': rest,
@@ -647,8 +703,7 @@ def vistaVerEmpl(request, rest, ced):
     return render(request, "Empleados/verPersonal.html", context=context)
 
 
-''' Esta función busca un empleado en la base de datos por su número de documento, cambia su estado de "Activo" a "Inactivo" o viceversa, guarda los cambios en la base de datos '''
-
+''' esta función busca un empleado en la base de datos por su número de documento, cambia su estado de "Activo" a "Inactivo" o viceversa, guarda los cambios en la base de datos '''
 @user_login_required
 def estadoEmp(request, rest, ced):
     empleados = Empleados.objects.get(documento=ced)
@@ -663,8 +718,6 @@ def estadoEmp(request, rest, ced):
     empleados.save()
     return redirect('map')
 
-''' Esta función toma una ruta completa como entrada y la analiza utilizando la función urlparse del módulo urllib.parse. 
-Extrae la ruta del URL analizado y devuelve el nombre del archivo donde se encuentra la entrevista.'''
 
 def rutaEntrevista(rutaCompleta):
     parsed_url = urlparse(rutaCompleta)
@@ -672,14 +725,9 @@ def rutaEntrevista(rutaCompleta):
     nombre_del_archivo = ruta_del_archivo_en_el_bucket.split('/')[-1]
     return nombre_del_archivo
 
-''' Esta función toma un nombre de archivo como entrada y utiliza la función mimetypes.guess_type para determinar el tipo de contenido del archivo y lo retorna'''
-
 def tipoContenido(nombreArchivo):
     contenido, encoding = mimetypes.guess_type(nombreArchivo)
     return contenido
-
-'''Esta función requiere inicio de sesión de usuario admin administrador y maneja una solicitud GET para recuperar servicios.
- Utiliza la paginación para mostrar 5 servicios  por página y renderiza la plantilla con los datos paginados.'''
 
 @user_login_required
 def servicios_especialidades(request):
@@ -688,26 +736,22 @@ def servicios_especialidades(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'servicios_especialidades/servicios.html', {'page_obj': page_obj})
-    
-'''Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST. 
-Crea un formulario utilizando serviciosForm y, si el método de solicitud es POST, 
-valida el formulario y guarda el servicio'''
 
 @user_login_required
 def crearServicio(request):
     form = serviciosForm()
     if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
         form = serviciosForm(request.POST)
         if form.is_valid():
             form.save()
+            print("Segunda salida")
             return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
         else:
+            print("Tercera salida")
             return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
     return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
-
-''' Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST.
- Recupera un servicio específico según el parámetro servicio_id y crea un formulario utilizando serviciosForm.
- Si el método de solicitud es POST, valida el formulario y guarda el servicio actualizado. '''
 
 @user_login_required
 def editarServicio(request, servicio_id):
@@ -715,18 +759,18 @@ def editarServicio(request, servicio_id):
 
     servicio = get_object_or_404(Servicios, _id=servicio_id)
     if request.method == 'POST':
+        print("salida entre medio 2")
         form = serviciosForm(request.POST, instance=servicio)
         if form.is_valid():
             form.save()
+            print("salida 2")
             return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
         else:
+            print("salida 3")
             return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
     form = serviciosForm(instance=servicio)
     return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
-
-''' Esta función maneja la eliminación de un servicio.
- Requiere inicio de sesión de usuario administrador y verifica si el método de solicitud es POST.
- Si es así, recupera el servicio según el parámetro servicio_id y lo elimina'''
 
 @csrf_exempt
 def eliminarServicio(request, servicio_id):
@@ -738,8 +782,7 @@ def eliminarServicio(request, servicio_id):
 
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
-'''Esta función recupera todas las especialidades almacenadas y luego utiliza la paginación para mostrar 5 especialidades por página.
- por ultimo renderiza la plantilla 'especialidades.html' con los datos paginados.'''
+
 def especialidades(request):
     especialidades = Especialidades.objects.all()
     paginator = Paginator(especialidades, 5)
@@ -747,42 +790,40 @@ def especialidades(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'servicios_especialidades/especialidades.html', {'page_obj': page_obj})
 
-'''Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST.
- Crea un formulario utilizando especialidadesForm y, 
-si el método de solicitud es POST, valida el formulario y guarda'''
 @user_login_required
 def crearEspecialidad(request):
     form = especialidadesForm()
     if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAAA")
         form = especialidadesForm(request.POST)
         if form.is_valid():
             form.save()
+            print("Segunda salida")
             return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
         else:
+            print("Tercera salida")
             return JsonResponse({'success': False, 'errors': form.errors})
+    print("Primera salida")
     return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
 
-'''Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST. 
- Recupera una especialidad específica según el parámetro servicio_id y crea un formulario utilizando especialidadesForm.
-  Si el método de solicitud es POST, valida el formulario y guarda '''
 @user_login_required
 def editarEspecialidad(request, servicio_id):
     especialidad_id = ObjectId(servicio_id)
 
     especialidad = get_object_or_404(Especialidades, _id=especialidad_id)
     if request.method == 'POST':
+        print("salida entre medio 2")
         form = especialidadesForm(request.POST, instance=especialidad)
         if form.is_valid():
             form.save()
+            print("salida 2")
             return JsonResponse({'success': True, 'message': 'Servicio creado exitosamente.'})
         else:
+            print("salida 3")
             return JsonResponse({'success': False, 'errors': form.errors})
+    print("salida 1")
     form = especialidadesForm(instance=especialidad)
     return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
-
-'''Esta función maneja la eliminación de una especialidad. Requiere inicio de sesión de usuario administrador
- y verifica si el método de solicitud es POST. Si es así,
- recupera la especialidad según el parámetro servicio_id y la elimina.''' 
 
 @csrf_exempt
 def eliminarEspecialidad(request, servicio_id):
@@ -794,9 +835,6 @@ def eliminarEspecialidad(request, servicio_id):
 
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
-'''Esta función requiere inicio de sesión de usuario administrador y recupera información sobre una empresa específica.
- Renderiza la plantilla 'map.html' con datos relevantes como la clave de API de Google Maps, 
-información del usuario, latitud, longitud y nivel de zoom.'''
 
 @user_login_required
 def mapaEmp(request, rest):
@@ -813,8 +851,6 @@ def mapaEmp(request, rest):
     }
     return render(request, 'google/map.html', context)
 
-'''Esta función requiere inicio de sesión de usuario administrador y recupera todos los empleados. 
- Renderiza la plantilla 'listaEmpleados.html' con los datos de los empleados y la información del usuario.'''
 
 @user_login_required
 def vistaListaEmplTodos(request):

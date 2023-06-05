@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f9b2c97-f662-4642-905c-02d7a3b0fec3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/mapa.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/static/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/templates/google/map.html" beforeDir="false" afterPath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/templates/google/map.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Django--GoogleMapsApi-main/googleApp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Django--GoogleMapsApi-main/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Django--GoogleMapsApi-main/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
