@@ -762,7 +762,7 @@ def crearEspecialidad(request):
             return JsonResponse({'success': False, 'errors': form.errors})
     return render(request, 'servicios_especialidades/crearServicio.html', {'form': form})
 
- '''Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST. 
+'''Esta función requiere inicio de sesión de usuario administrador y maneja tanto solicitudes GET como POST. 
  Recupera una especialidad específica según el parámetro servicio_id y crea un formulario utilizando especialidadesForm.
   Si el método de solicitud es POST, valida el formulario y guarda '''
 @user_login_required
@@ -780,7 +780,7 @@ def editarEspecialidad(request, servicio_id):
     form = especialidadesForm(instance=especialidad)
     return render(request, 'servicios_especialidades/editarServicio.html', {'form': form})
 
- '''Esta función maneja la eliminación de una especialidad. Requiere inicio de sesión de usuario administrador
+'''Esta función maneja la eliminación de una especialidad. Requiere inicio de sesión de usuario administrador
  y verifica si el método de solicitud es POST. Si es así,
  recupera la especialidad según el parámetro servicio_id y la elimina.''' 
 
@@ -813,7 +813,7 @@ def mapaEmp(request, rest):
     }
     return render(request, 'google/map.html', context)
 
- '''Esta función requiere inicio de sesión de usuario administrador y recupera todos los empleados. 
+'''Esta función requiere inicio de sesión de usuario administrador y recupera todos los empleados. 
  Renderiza la plantilla 'listaEmpleados.html' con los datos de los empleados y la información del usuario.'''
 
 @user_login_required
